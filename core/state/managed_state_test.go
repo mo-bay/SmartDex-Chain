@@ -17,10 +17,11 @@
 package state
 
 import (
-	"github.com/tomochain/tomochain/core/rawdb"
 	"testing"
 
-	"github.com/tomochain/tomochain/common"
+	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
+
+	"github.com/69th-byte/SmartDex-Chain/common"
 )
 
 var addr = common.BytesToAddress([]byte("test"))

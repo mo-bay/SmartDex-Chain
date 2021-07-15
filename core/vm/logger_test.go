@@ -17,12 +17,13 @@
 package vm
 
 import (
-	"github.com/tomochain/tomochain/params"
 	"math/big"
 	"testing"
 
-	"github.com/tomochain/tomochain/common"
-	"github.com/tomochain/tomochain/core/state"
+	"github.com/69th-byte/SmartDex-Chain/params"
+
+	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/69th-byte/SmartDex-Chain/core/state"
 )
 
 type dummyContractRef struct {
@@ -50,7 +51,7 @@ func (*dummyStatedb) GetRefund() uint64 { return 1337 }
 
 func TestStoreCapture(t *testing.T) {
 	var (
-		env      = NewEVM(Context{}, &dummyStatedb{},nil, params.TestChainConfig, Config{})
+		env      = NewEVM(Context{}, &dummyStatedb{}, nil, params.TestChainConfig, Config{})
 		logger   = NewStructLogger(nil)
 		mem      = NewMemory()
 		stack    = newstack()

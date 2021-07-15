@@ -17,8 +17,9 @@
 package lendingstate
 
 import (
-	"github.com/tomochain/tomochain/common"
 	"math/big"
+
+	"github.com/69th-byte/SmartDex-Chain/common"
 )
 
 type journalEntry interface {

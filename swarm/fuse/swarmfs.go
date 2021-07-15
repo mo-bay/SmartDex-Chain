@@ -17,9 +17,10 @@
 package fuse
 
 import (
-	"github.com/tomochain/tomochain/swarm/api"
 	"sync"
 	"time"
+
+	"github.com/69th-byte/SmartDex-Chain/swarm/api"
 )
 
 const (

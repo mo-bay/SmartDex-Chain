@@ -1,9 +1,10 @@
 package state
 
 import (
-	"github.com/tomochain/tomochain/common"
-	"github.com/tomochain/tomochain/crypto"
 	"math/big"
+
+	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/69th-byte/SmartDex-Chain/crypto"
 )
 
 func GetLocSimpleVariable(slot uint64) common.Hash {

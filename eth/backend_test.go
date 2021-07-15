@@ -1,9 +1,10 @@
 package eth
 
 import (
-	"github.com/tomochain/tomochain/params"
 	"math/big"
 	"testing"
+
+	"github.com/69th-byte/SmartDex-Chain/params"
 )
 
 func TestRewardInflation(t *testing.T) {

@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"github.com/tomochain/tomochain/core/rawdb"
 	"math"
 	"math/big"
 	"math/rand"
@@ -29,10 +28,12 @@ import (
 	"testing"
 	"testing/quick"
 
+	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
+
 	check "gopkg.in/check.v1"
 
-	"github.com/tomochain/tomochain/common"
-	"github.com/tomochain/tomochain/core/types"
+	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/69th-byte/SmartDex-Chain/core/types"
 )
 
 // Tests that updating a state trie does not leak any database writes prior to
@@ -125,7 +126,7 @@ func TestIntermediateLeaks(t *testing.T) {
 
 // TestCopy tests that copying a statedb object indeed makes the original and
 // the copy independent of each other. This test is a regression test against
-// https://github.com/tomochain/tomochain/pull/15549.
+// https://github.com/69th-byte/SmartDex-Chain/pull/15549.
 func TestCopy(t *testing.T) {
 	// Create a random state test to copy and modify "independently"
 	db := rawdb.NewMemoryDatabase()
