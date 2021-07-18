@@ -54,9 +54,9 @@ if [[ ! -z $NETWORK_ID ]]; then
     7879 )
       genesisPath="mainnet.json"
       ;;
-    89 )
+    7880 )
       genesisPath="testnet.json"
-      params="$params --sdx-testnet --gcmode archive --rpcapi db,eth,net,web3,debug,posv"
+      params="$params --gcmode archive --rpcapi db,eth,net,web3,debug,posv"
       ;;
     90 )
       genesisPath="devnet.json"
