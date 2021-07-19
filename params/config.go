@@ -32,7 +32,7 @@ var (
 var (
 	// SdxChain mainnet config
 	SdxMainnetChainConfig = &ChainConfig{
-		ChainId:        big.NewInt(7879),
+		ChainId:        big.NewInt(7880),
 		HomesteadBlock: big.NewInt(1),
 		EIP150Block:    big.NewInt(2),
 		EIP150Hash:     common.HexToHash("0x0000000000000000000000000000000000000000000000000000000000000000"),
