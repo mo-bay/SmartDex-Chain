@@ -19,8 +19,8 @@
 package whisperv6
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/hexutil"
 )
 
 // TopicType represents a cryptographically secure, probabilistic partial

@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common/mclock"
+	"github.com/tomochain/tomochain/common/mclock"
 )
 
 const (

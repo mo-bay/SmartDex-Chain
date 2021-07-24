@@ -19,10 +19,10 @@ package shhclient
 import (
 	"context"
 
-	"github.com/69th-byte/SmartDex-Chain"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
-	whisper "github.com/69th-byte/SmartDex-Chain/whisper/whisperv6"
+	"github.com/tomochain/tomochain"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/rpc"
+	whisper "github.com/tomochain/tomochain/whisper/whisperv6"
 )
 
 // Client defines typed wrappers for the Whisper v6 RPC API.
@@ -168,7 +168,7 @@ func (sc *Client) Post(ctx context.Context, message whisper.NewMessage) error {
 // SubscribeMessages subscribes to messages that match the given criteria. This method
 // is only supported on bi-directional connections such as websockets and IPC.
 // NewMessageFilter uses polling and is supported over HTTP.
-func (sc *Client) SubscribeMessages(ctx context.Context, criteria whisper.Criteria, ch chan<- *whisper.Message) (sdxchain.Subscription, error) {
+func (sc *Client) SubscribeMessages(ctx context.Context, criteria whisper.Criteria, ch chan<- *whisper.Message) (tomochain.Subscription, error) {
 	return sc.c.ShhSubscribe(ctx, ch, "messages", criteria)
 }
 

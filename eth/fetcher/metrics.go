@@ -19,7 +19,7 @@
 package fetcher
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/metrics"
+	"github.com/tomochain/tomochain/metrics"
 )
 
 var (

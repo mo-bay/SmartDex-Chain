@@ -20,8 +20,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/crypto"
 )
 
 // Tests that transactions can be added to strict lists and list contents and

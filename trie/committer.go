@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/rlp"
 	"golang.org/x/crypto/sha3"
 )
 

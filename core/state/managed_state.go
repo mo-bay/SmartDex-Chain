@@ -19,7 +19,7 @@ package state
 import (
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 type account struct {

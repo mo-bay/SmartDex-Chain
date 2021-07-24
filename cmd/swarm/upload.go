@@ -30,8 +30,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/69th-byte/SmartDex-Chain/cmd/utils"
-	swarm "github.com/69th-byte/SmartDex-Chain/swarm/api/client"
+	"github.com/tomochain/tomochain/cmd/utils"
+	swarm "github.com/tomochain/tomochain/swarm/api/client"
 	"gopkg.in/urfave/cli.v1"
 )
 

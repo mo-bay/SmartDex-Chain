@@ -19,7 +19,7 @@ package vm
 import (
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 // ContractRef is a reference to the contract's backing object

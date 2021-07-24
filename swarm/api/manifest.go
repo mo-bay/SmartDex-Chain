@@ -27,9 +27,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/swarm/storage"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/swarm/storage"
 )
 
 const (

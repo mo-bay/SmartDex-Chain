@@ -26,9 +26,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/event"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/event"
 )
 
 var testSigData = make([]byte, 32)

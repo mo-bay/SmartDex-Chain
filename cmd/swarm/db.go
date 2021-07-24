@@ -22,9 +22,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/69th-byte/SmartDex-Chain/cmd/utils"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/swarm/storage"
+	"github.com/tomochain/tomochain/cmd/utils"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/swarm/storage"
 	"gopkg.in/urfave/cli.v1"
 )
 

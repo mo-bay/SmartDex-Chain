@@ -18,7 +18,7 @@ package vm
 
 import (
 	"fmt"
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/params"
 )
 
 // EnableEIP enables the given EIP on the config.

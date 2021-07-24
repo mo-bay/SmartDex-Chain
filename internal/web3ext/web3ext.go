@@ -18,21 +18,21 @@
 package web3ext
 
 var Modules = map[string]string{
-	"admin":       Admin_JS,
-	"chequebook":  Chequebook_JS,
-	"clique":      Clique_JS,
-	"posv":        Posv_JS,
-	"debug":       Debug_JS,
-	"eth":         Eth_JS,
-	"miner":       Miner_JS,
-	"net":         Net_JS,
-	"personal":    Personal_JS,
-	"rpc":         RPC_JS,
-	"shh":         Shh_JS,
-	"sdxx":        SdxX_JS,
-	"sdxxlending": SdxXLending_JS,
-	"swarmfs":     SWARMFS_JS,
-	"txpool":      TxPool_JS,
+	"admin":        Admin_JS,
+	"chequebook":   Chequebook_JS,
+	"clique":       Clique_JS,
+	"posv":         Posv_JS,
+	"debug":        Debug_JS,
+	"eth":          Eth_JS,
+	"miner":        Miner_JS,
+	"net":          Net_JS,
+	"personal":     Personal_JS,
+	"rpc":          RPC_JS,
+	"shh":          Shh_JS,
+	"tomox":        TomoX_JS,
+	"tomoxlending": TomoXLending_JS,
+	"swarmfs":      SWARMFS_JS,
+	"txpool":       TxPool_JS,
 }
 
 const Chequebook_JS = `
@@ -636,304 +636,304 @@ web3._extend({
 });
 `
 
-const SdxX_JS = `
+const TomoX_JS = `
 web3._extend({
-	property: 'sdxx',
+	property: 'tomox',
 	methods: [
 		new web3._extend.Method({
 			name: 'version',
-			call: 'sdxx_version',
+			call: 'tomox_version',
 			params: 0,
 			outputFormatter: web3._extend.utils.toDecimal
 		}),
 		new web3._extend.Method({
 			name: 'info',
-			call: 'sdxx_info',
+			call: 'tomox_info',
 			params: 0
 		}),
 		new web3._extend.Method({
             name: 'getFeeByEpoch',
-            call: 'sdxx_getFeeByEpoch',
+            call: 'tomox_getFeeByEpoch',
             params: 1,
             inputFormatter: [null, web3._extend.formatters.inputAddressFormatter]
         }),
 		new web3._extend.Method({
             name: 'sendOrderRawTransaction',
-            call: 'sdxx_sendOrderRawTransaction',
+            call: 'tomox_sendOrderRawTransaction',
             params: 1
 		}),
 		new web3._extend.Method({
             name: 'sendLendingRawTransaction',
-            call: 'sdxx_sendLendingRawTransaction',
+            call: 'tomox_sendLendingRawTransaction',
             params: 1
 		}),
 		
 		new web3._extend.Method({
             name: 'sendOrderTransaction',
-            call: 'sdxx_sendOrder',
+            call: 'tomox_sendOrder',
             params: 1
 		}),
 		new web3._extend.Method({
             name: 'sendLendingTransaction',
-            call: 'sdxx_sendLending',
+            call: 'tomox_sendLending',
             params: 1
 		}),
 		new web3._extend.Method({
             name: 'getOrderTxMatchByHash',
-            call: 'sdxx_getOrderTxMatchByHash',
+            call: 'tomox_getOrderTxMatchByHash',
             params: 1
 		}),
 		new web3._extend.Method({
             name: 'getOrderPoolContent',
-            call: 'sdxx_getOrderPoolContent',
+            call: 'tomox_getOrderPoolContent',
             params: 0
 		}),
 		new web3._extend.Method({
             name: 'getOrderStats',
-            call: 'sdxx_getOrderStats',
+            call: 'tomox_getOrderStats',
             params: 0
 		}),
 		new web3._extend.Method({
             name: 'getOrderCount',
-            call: 'sdxx_getOrderCount',
+            call: 'tomox_getOrderCount',
             params: 1
         }),
 		new web3._extend.Method({
             name: 'getBestBid',
-            call: 'sdxx_getBestBid',
+            call: 'tomox_getBestBid',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getBestAsk',
-            call: 'sdxx_getBestAsk',
+            call: 'tomox_getBestAsk',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getBidTree',
-            call: 'sdxx_getBidTree',
+            call: 'tomox_getBidTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getAskTree',
-            call: 'sdxx_getAskTree',
+            call: 'tomox_getAskTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getOrderById',
-            call: 'sdxx_getOrderById',
+            call: 'tomox_getOrderById',
             params: 3
 		}),
 		new web3._extend.Method({
             name: 'getPrice',
-            call: 'sdxx_getPrice',
+            call: 'tomox_getPrice',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getLastEpochPrice',
-            call: 'sdxx_getLastEpochPrice',
+            call: 'tomox_getLastEpochPrice',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getCurrentEpochPrice',
-            call: 'sdxx_getCurrentEpochPrice',
+            call: 'tomox_getCurrentEpochPrice',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getTradingOrderBookInfo',
-            call: 'sdxx_getTradingOrderBookInfo',
+            call: 'tomox_getTradingOrderBookInfo',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getLiquidationPriceTree',
-            call: 'sdxx_getLiquidationPriceTree',
+            call: 'tomox_getLiquidationPriceTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getInvestingTree',
-            call: 'sdxx_getInvestingTree',
+            call: 'tomox_getInvestingTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getBorrowingTree',
-            call: 'sdxx_getBorrowingTree',
+            call: 'tomox_getBorrowingTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getLendingOrderBookInfo',
-            call: 'sdxx_getLendingOrderBookInfo',
+            call: 'tomox_getLendingOrderBookInfo',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getLendingOrderTree',
-            call: 'sdxx_getLendingOrderTree',
+            call: 'tomox_getLendingOrderTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getLendingTradeTree',
-            call: 'sdxx_getLendingTradeTree',
+            call: 'tomox_getLendingTradeTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getLiquidationTimeTree',
-            call: 'sdxx_getLiquidationTimeTree',
+            call: 'tomox_getLiquidationTimeTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getLendingOrderCount',
-            call: 'sdxx_getLendingOrderCount',
+            call: 'tomox_getLendingOrderCount',
             params: 1
         }),
 		new web3._extend.Method({
             name: 'getBestInvesting',
-            call: 'sdxx_getBestInvesting',
+            call: 'tomox_getBestInvesting',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getBestBorrowing',
-            call: 'sdxx_getBestBorrowing',
+            call: 'tomox_getBestBorrowing',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getBids',
-            call: 'sdxx_getBids',
+            call: 'tomox_getBids',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getAsks',
-            call: 'sdxx_getAsks',
+            call: 'tomox_getAsks',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getInvests',
-            call: 'sdxx_getInvests',
+            call: 'tomox_getInvests',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getBorrows',
-            call: 'sdxx_getBorrows',
+            call: 'tomox_getBorrows',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getLendingTxMatchByHash',
-            call: 'sdxx_getLendingTxMatchByHash',
+            call: 'tomox_getLendingTxMatchByHash',
             params: 1
 		}),
 		new web3._extend.Method({
             name: 'getLiquidatedTradesByTxHash',
-            call: 'sdxx_getLiquidatedTradesByTxHash',
+            call: 'tomox_getLiquidatedTradesByTxHash',
             params: 1
 		}),
 		new web3._extend.Method({
             name: 'getLendingOrderById',
-            call: 'sdxx_getLendingOrderById',
+            call: 'tomox_getLendingOrderById',
             params: 3
 		}),
 		new web3._extend.Method({
             name: 'getLendingTradeById',
-            call: 'sdxx_getLendingTradeById',
+            call: 'tomox_getLendingTradeById',
             params: 3
 		}),
 	]
 });
 `
 
-const SdxXLending_JS = `
+const TomoXLending_JS = `
 web3._extend({
-	property: 'sdxxlending',
+	property: 'tomoxlending',
 	methods: [
 		new web3._extend.Method({
 			name: 'version',
-			call: 'sdxxlending_version',
+			call: 'tomoxlending_version',
 			params: 0,
 			outputFormatter: web3._extend.utils.toDecimal
 		}),
 		new web3._extend.Method({
 			name: 'info',
-			call: 'sdxxlending_info',
+			call: 'tomoxlending_info',
 			params: 0
 		}),
 		new web3._extend.Method({
             name: 'createOrder',
-            call: 'sdxxlending_createOrder',
+            call: 'tomoxlending_createOrder',
             params: 1,
             inputFormatter: [null]
         }),
         new web3._extend.Method({
             name: 'cancelOrder',
-            call: 'sdxxlending_cancelOrder',
+            call: 'tomoxlending_cancelOrder',
             params: 1,
             inputFormatter: [null]
         }),
         new web3._extend.Method({
             name: 'getOrders',
-            call: 'sdxxlending_getOrders',
+            call: 'tomoxlending_getOrders',
             params: 1
         }),
 		new web3._extend.Method({
             name: 'getOrderNonce',
-            call: 'sdxxlending_getOrderNonce',
+            call: 'tomoxlending_getOrderNonce',
             params: 1,
             inputFormatter: [web3._extend.formatters.inputAddressFormatter]
 		}),
 		new web3._extend.Method({
             name: 'getFeeByEpoch',
-            call: 'sdxxlending_GetFeeByEpoch',
+            call: 'tomoxlending_GetFeeByEpoch',
             params: 1,
             inputFormatter: [null, web3._extend.formatters.inputAddressFormatter]
         }),
 		new web3._extend.Method({
             name: 'getPendingOrders',
-            call: 'sdxxlending_getPendingOrders',
+            call: 'tomoxlending_getPendingOrders',
             params: 1
         }),
 		new web3._extend.Method({
             name: 'getAllPendingHashes',
-            call: 'sdxxlending_getAllPendingHashes',
+            call: 'tomoxlending_getAllPendingHashes',
             params: 0
         }),
 		new web3._extend.Method({
             name: 'sendOrderRawTransaction',
-            call: 'sdxxlending_sendOrderRawTransaction',
+            call: 'tomoxlending_sendOrderRawTransaction',
             params: 1
         }),
 		new web3._extend.Method({
             name: 'sendOrderTransaction',
-            call: 'sdxxlending_sendOrder',
+            call: 'tomoxlending_sendOrder',
             params: 1
 		}),
 		new web3._extend.Method({
             name: 'getOrderCount',
-            call: 'sdxxlending_getOrderCount',
+            call: 'tomoxlending_getOrderCount',
             params: 1
         }),
 		new web3._extend.Method({
             name: 'getBestBid',
-            call: 'sdxxlending_getBestBid',
+            call: 'tomoxlending_getBestBid',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getBestAsk',
-            call: 'sdxxlending_getBestAsk',
+            call: 'tomoxlending_getBestAsk',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getBidTree',
-            call: 'sdxxlending_getBidTree',
+            call: 'tomoxlending_getBidTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getAskTree',
-            call: 'sdxxlending_getAskTree',
+            call: 'tomoxlending_getAskTree',
             params: 2
 		}),
 		new web3._extend.Method({
             name: 'getOrderById',
-            call: 'sdxxlending_getOrderById',
+            call: 'tomoxlending_getOrderById',
             params: 3
 		}),
 		new web3._extend.Method({
             name: 'getPrice',
-            call: 'sdxxlending_getPrice',
+            call: 'tomoxlending_getPrice',
             params: 2
 		}),
 	]
@@ -950,7 +950,7 @@ web3._extend({
 
    var sendOrderTransaction = new Method({
        name: 'sendOrder',
-       call: 'sdxx_sendOrder',
+       call: 'tomox_sendOrder',
        params: 1,
        inputFormatter: [null]
    });

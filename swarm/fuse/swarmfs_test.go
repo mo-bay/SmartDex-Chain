@@ -27,8 +27,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/swarm/api"
-	"github.com/69th-byte/SmartDex-Chain/swarm/storage"
+	"github.com/tomochain/tomochain/swarm/api"
+	"github.com/tomochain/tomochain/swarm/storage"
 )
 
 type fileInfo struct {

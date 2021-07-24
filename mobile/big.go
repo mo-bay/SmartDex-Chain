@@ -22,7 +22,7 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 // A BigInt represents a signed multi-precision integer.

@@ -20,7 +20,7 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 const Version = "1.0"

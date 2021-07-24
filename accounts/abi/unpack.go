@@ -22,7 +22,7 @@ import (
 	"math/big"
 	"reflect"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 // reads the integer based on its kind

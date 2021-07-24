@@ -25,7 +25,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/log"
 )
 
 // explorerDockerfile is the Dockerfile required to run a block explorer.

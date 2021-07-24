@@ -25,9 +25,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/swarm/storage"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/swarm/storage"
 )
 
 func init() {

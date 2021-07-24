@@ -36,7 +36,7 @@ import (
 	"math/big"
 	"unsafe"
 
-	"github.com/69th-byte/SmartDex-Chain/common/math"
+	"github.com/tomochain/tomochain/common/math"
 )
 
 /*

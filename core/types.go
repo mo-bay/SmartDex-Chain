@@ -17,12 +17,12 @@
 package core
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/sdxx/tradingstate"
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending/lendingstate"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/tomox/tradingstate"
+	"github.com/tomochain/tomochain/tomoxlending/lendingstate"
 	"math/big"
 )
 
@@ -38,9 +38,9 @@ type Validator interface {
 	// gas used.
 	ValidateState(block, parent *types.Block, state *state.StateDB, receipts types.Receipts, usedGas uint64) error
 
-	ValidateTradingOrder(statedb *state.StateDB, sdxxStatedb *tradingstate.TradingStateDB, txMatchBatch tradingstate.TxMatchBatch, coinbase common.Address, header *types.Header) error
+	ValidateTradingOrder(statedb *state.StateDB, tomoxStatedb *tradingstate.TradingStateDB, txMatchBatch tradingstate.TxMatchBatch, coinbase common.Address, header *types.Header) error
 
-	ValidateLendingOrder(statedb *state.StateDB, lendingStateDb *lendingstate.LendingStateDB, sdxxStatedb *tradingstate.TradingStateDB, batch lendingstate.TxLendingBatch, coinbase common.Address, header *types.Header) error
+	ValidateLendingOrder(statedb *state.StateDB, lendingStateDb *lendingstate.LendingStateDB, tomoxStatedb *tradingstate.TradingStateDB, batch lendingstate.TxLendingBatch, coinbase common.Address, header *types.Header) error
 }
 
 // Processor is an interface for processing blocks using a given initial state.

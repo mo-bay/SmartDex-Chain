@@ -21,8 +21,8 @@ package geth
 import (
 	"errors"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	ethereum "github.com/69th-byte/SmartDex-Chain"
+	ethereum "github.com/tomochain/tomochain"
+	"github.com/tomochain/tomochain/common"
 )
 
 // Subscription represents an event subscription where events are

@@ -22,7 +22,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
+	"github.com/tomochain/tomochain/ethdb"
 )
 
 // TestDatabaseSuite runs a suite of tests against a KeyValueStore database

@@ -20,8 +20,8 @@ import (
 	"math/big"
 	"reflect"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/math"
 )
 
 // packBytesSlice packs the given bytes as [L, V] as the canonical representation

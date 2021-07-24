@@ -25,7 +25,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/swarm/storage"
+	"github.com/tomochain/tomochain/swarm/storage"
 )
 
 func manifest(paths ...string) (manifestReader storage.LazySectionReader) {

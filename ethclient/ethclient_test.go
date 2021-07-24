@@ -16,19 +16,19 @@
 
 package ethclient
 
-import "github.com/69th-byte/SmartDex-Chain"
+import "github.com/tomochain/tomochain"
 
 // Verify that Client implements the ethereum interfaces.
 var (
-	_ = sdxchain.ChainReader(&Client{})
-	_ = sdxchain.TransactionReader(&Client{})
-	_ = sdxchain.ChainStateReader(&Client{})
-	_ = sdxchain.ChainSyncReader(&Client{})
-	_ = sdxchain.ContractCaller(&Client{})
-	_ = sdxchain.GasEstimator(&Client{})
-	_ = sdxchain.GasPricer(&Client{})
-	_ = sdxchain.LogFilterer(&Client{})
-	_ = sdxchain.PendingStateReader(&Client{})
+	_ = tomochain.ChainReader(&Client{})
+	_ = tomochain.TransactionReader(&Client{})
+	_ = tomochain.ChainStateReader(&Client{})
+	_ = tomochain.ChainSyncReader(&Client{})
+	_ = tomochain.ContractCaller(&Client{})
+	_ = tomochain.GasEstimator(&Client{})
+	_ = tomochain.GasPricer(&Client{})
+	_ = tomochain.LogFilterer(&Client{})
+	_ = tomochain.PendingStateReader(&Client{})
 	// _ = ethereum.PendingStateEventer(&Client{})
-	_ = sdxchain.PendingContractCaller(&Client{})
+	_ = tomochain.PendingContractCaller(&Client{})
 )

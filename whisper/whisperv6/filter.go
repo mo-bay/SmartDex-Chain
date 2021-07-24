@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/log"
 )
 
 // Filter represents a Whisper message filter

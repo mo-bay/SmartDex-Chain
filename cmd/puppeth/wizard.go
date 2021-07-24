@@ -30,9 +30,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/log"
 	"golang.org/x/crypto/ssh/terminal"
 )
 

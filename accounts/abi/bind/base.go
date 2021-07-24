@@ -22,12 +22,12 @@ import (
 	"fmt"
 	"math/big"
 
-	sdxchain "github.com/69th-byte/SmartDex-Chain"
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/event"
+	"github.com/tomochain/tomochain"
+	"github.com/tomochain/tomochain/accounts/abi"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/event"
 )
 
 // SignerFn is a signer function callback when a contract requires a method to
@@ -128,7 +128,7 @@ func (c *BoundContract) Call(opts *CallOpts, result interface{}, method string, 
 		return err
 	}
 	var (
-		msg    = sdxchain.CallMsg{From: opts.From, To: &c.address, Data: input, GasPrice: common.MinGasPrice, Gas: uint64(4200000)}
+		msg    = tomochain.CallMsg{From: opts.From, To: &c.address, Data: input, GasPrice: common.MinGasPrice, Gas: uint64(4200000)}
 		ctx    = ensureContext(opts.Context)
 		code   []byte
 		output []byte
@@ -218,7 +218,7 @@ func (c *BoundContract) transact(opts *TransactOpts, contract *common.Address, i
 			}
 		}
 		// If the contract surely has code (or code is not needed), estimate the transaction
-		msg := sdxchain.CallMsg{From: opts.From, To: contract, Value: value, Data: input}
+		msg := tomochain.CallMsg{From: opts.From, To: contract, Value: value, Data: input}
 		gasLimit, err = c.transactor.EstimateGas(ensureContext(opts.Context), msg)
 		if err != nil {
 			return nil, fmt.Errorf("failed to estimate gas needed: %v", err)
@@ -261,7 +261,7 @@ func (c *BoundContract) FilterLogs(opts *FilterOpts, name string, query ...[]int
 	// Start the background filtering
 	logs := make(chan types.Log, 128)
 
-	config := sdxchain.FilterQuery{
+	config := tomochain.FilterQuery{
 		Addresses: []common.Address{c.address},
 		Topics:    topics,
 		FromBlock: new(big.Int).SetUint64(opts.Start),
@@ -310,7 +310,7 @@ func (c *BoundContract) WatchLogs(opts *WatchOpts, name string, query ...[]inter
 	// Start the background filtering
 	logs := make(chan types.Log, 128)
 
-	config := sdxchain.FilterQuery{
+	config := tomochain.FilterQuery{
 		Addresses: []common.Address{c.address},
 		Topics:    topics,
 	}

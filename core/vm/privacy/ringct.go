@@ -8,11 +8,11 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/log"
 )
 
 // These constants define the lengths of serialized public keys.

@@ -21,7 +21,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
+	"github.com/tomochain/tomochain/core/vm"
 )
 
 // Iterator for disassembled EVM instructions

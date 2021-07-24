@@ -26,7 +26,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common/mclock"
+	"github.com/tomochain/tomochain/common/mclock"
 )
 
 var (

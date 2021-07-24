@@ -10,11 +10,11 @@ fi
 # Create fake Go workspace if it doesn't exist yet.
 workspace="$PWD/build/_workspace"
 root="$PWD"
-ethdir="$workspace/src/github.com/69th-byte/SmartDex-Chain"
-if [ ! -L "$ethdir/SmartDex-Chain" ]; then
+ethdir="$workspace/src/github.com/tomochain"
+if [ ! -L "$ethdir/tomochain" ]; then
     mkdir -p "$ethdir"
     cd "$ethdir"
-    ln -s ../../../../../. SmartDex-Chain
+    ln -s ../../../../../. tomochain
     cd "$root"
 fi
 
@@ -23,8 +23,8 @@ GOPATH="$workspace"
 export GOPATH
 
 # Run the command inside the workspace.
-cd "$ethdir/SmartDex-Chain"
-PWD="$ethdir/SmartDex-Chain"
+cd "$ethdir/tomochain"
+PWD="$ethdir/tomochain"
 
 # Launch the arguments with the configured environment.
 exec "$@"

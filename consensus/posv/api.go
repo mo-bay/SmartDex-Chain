@@ -1,5 +1,4 @@
-// Copyright 2019 The Tomochain Authors
-// Copyright (c) 2021 Sdxchain
+// Copyright (c) 2018 Tomochain
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -17,12 +16,11 @@
 package posv
 
 import (
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/rpc"
 	"math/big"
-
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
 )
 
 // API is a user facing RPC API to allow controlling the signer and voting
@@ -33,10 +31,10 @@ type API struct {
 }
 type NetworkInformation struct {
 	NetworkId                  *big.Int
-	SdxValidatorAddress        common.Address
+	TomoValidatorAddress       common.Address
 	RelayerRegistrationAddress common.Address
-	SdxXListingAddress         common.Address
-	SdxZAddress                common.Address
+	TomoXListingAddress        common.Address
+	TomoZAddress               common.Address
 	LendingAddress             common.Address
 }
 
@@ -103,17 +101,17 @@ func (api *API) NetworkInformation() NetworkInformation {
 	defer api.posv.lock.RUnlock()
 	info := NetworkInformation{}
 	info.NetworkId = api.chain.Config().ChainId
-	info.SdxValidatorAddress = common.HexToAddress(common.MasternodeVotingSMC)
+	info.TomoValidatorAddress = common.HexToAddress(common.MasternodeVotingSMC)
 	if common.IsTestnet {
 		info.LendingAddress = common.HexToAddress(common.LendingRegistrationSMCTestnet)
 		info.RelayerRegistrationAddress = common.HexToAddress(common.RelayerRegistrationSMCTestnet)
-		info.SdxXListingAddress = common.SdxXListingSMCTestNet
-		info.SdxZAddress = common.SRC21IssuerSMCTestNet
+		info.TomoXListingAddress = common.TomoXListingSMCTestNet
+		info.TomoZAddress = common.TRC21IssuerSMCTestNet
 	} else {
 		info.LendingAddress = common.HexToAddress(common.LendingRegistrationSMC)
 		info.RelayerRegistrationAddress = common.HexToAddress(common.RelayerRegistrationSMC)
-		info.SdxXListingAddress = common.SdxXListingSMC
-		info.SdxZAddress = common.SRC21IssuerSMC
+		info.TomoXListingAddress = common.TomoXListingSMC
+		info.TomoZAddress = common.TRC21IssuerSMC
 	}
 	return info
 }

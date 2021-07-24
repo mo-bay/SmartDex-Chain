@@ -26,7 +26,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/log"
 )
 
 // makeWizard creates and returns a new puppeth wizard.

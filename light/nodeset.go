@@ -20,10 +20,10 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 // NodeSet stores a set of trie nodes. It implements trie.Database and can also

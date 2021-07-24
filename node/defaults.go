@@ -22,8 +22,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/69th-byte/SmartDex-Chain/p2p"
-	"github.com/69th-byte/SmartDex-Chain/p2p/nat"
+	"github.com/tomochain/tomochain/p2p"
+	"github.com/tomochain/tomochain/p2p/nat"
 )
 
 const (
@@ -55,11 +55,11 @@ func DefaultDataDir() string {
 	home := homeDir()
 	if home != "" {
 		if runtime.GOOS == "darwin" {
-			return filepath.Join(home, "Library", "Sdxchain")
+			return filepath.Join(home, "Library", "Tomochain")
 		} else if runtime.GOOS == "windows" {
-			return filepath.Join(home, "AppData", "Roaming", "Sdxchain")
+			return filepath.Join(home, "AppData", "Roaming", "Tomochain")
 		} else {
-			return filepath.Join(home, ".sdx")
+			return filepath.Join(home, ".tomo")
 		}
 	}
 	// As we cannot guess a stable location, return empty and handle later

@@ -19,23 +19,22 @@ package les
 import (
 	"bytes"
 	"context"
+	"github.com/tomochain/tomochain/core/rawdb"
 	"math/big"
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
-
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/eth"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/light"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/math"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/eth"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/light"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 type odrTestFn func(ctx context.Context, db ethdb.Database, config *params.ChainConfig, bc *core.BlockChain, lc *light.LightChain, bhash common.Hash) []byte
@@ -129,7 +128,7 @@ func odrContractCall(ctx context.Context, db ethdb.Database, config *params.Chai
 			if err == nil {
 				from := statedb.GetOrNewStateObject(testBankAddress)
 				from.SetBalance(math.MaxBig256)
-				feeCapacity := state.GetSRC21FeeCapacityFromState(statedb)
+				feeCapacity := state.GetTRC21FeeCapacityFromState(statedb)
 				var balanceTokenFee *big.Int
 				if value, ok := feeCapacity[testContractAddr]; ok {
 					balanceTokenFee = value
@@ -149,7 +148,7 @@ func odrContractCall(ctx context.Context, db ethdb.Database, config *params.Chai
 			header := lc.GetHeaderByHash(bhash)
 			statedb := light.NewState(ctx, header, lc.Odr())
 			statedb.SetBalance(testBankAddress, math.MaxBig256)
-			feeCapacity := state.GetSRC21FeeCapacityFromState(statedb)
+			feeCapacity := state.GetTRC21FeeCapacityFromState(statedb)
 			var balanceTokenFee *big.Int
 			if value, ok := feeCapacity[testContractAddr]; ok {
 				balanceTokenFee = value

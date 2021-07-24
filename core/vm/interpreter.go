@@ -20,9 +20,9 @@ import (
 	"hash"
 	"sync/atomic"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/math"
+	"github.com/tomochain/tomochain/log"
 )
 
 // Config are the configuration options for the Interpreter

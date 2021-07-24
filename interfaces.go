@@ -15,15 +15,15 @@
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // Package ethereum defines interfaces for interacting with Ethereum.
-package sdxchain
+package tomochain
 
 import (
 	"context"
 	"errors"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/types"
 )
 
 // NotFound is returned by API methods if the requested item does not exist.

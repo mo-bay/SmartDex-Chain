@@ -23,7 +23,7 @@ import (
 	"os"
 	"runtime/trace"
 
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/log"
 )
 
 // StartGoTrace turns on tracing, writing to the given file.

@@ -34,9 +34,9 @@ import (
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 func init() {
@@ -124,7 +124,7 @@ func TestUDP_packetErrors(t *testing.T) {
 	test := newUDPTest(t)
 	defer test.table.Close()
 
-	test.packetIn(errExpired, pingSdx, &ping{From: testRemote, To: testLocalAnnounced, Version: Version})
+	test.packetIn(errExpired, pingTomo, &ping{From: testRemote, To: testLocalAnnounced, Version: Version})
 	test.packetIn(errUnsolicitedReply, pongPacket, &pong{ReplyTok: []byte{}, Expiration: futureExp})
 	test.packetIn(errUnknownNode, findnodePacket, &findnode{Expiration: futureExp})
 	test.packetIn(errUnsolicitedReply, neighborsPacket, &neighbors{Expiration: futureExp})
@@ -329,7 +329,7 @@ func TestUDP_successfulPing(t *testing.T) {
 	defer test.table.Close()
 
 	// The remote side sends a ping packet to initiate the exchange.
-	go test.packetIn(nil, pingSdx, &ping{From: testRemote, To: testLocalAnnounced, Version: Version, Expiration: futureExp})
+	go test.packetIn(nil, pingTomo, &ping{From: testRemote, To: testLocalAnnounced, Version: Version, Expiration: futureExp})
 
 	// the ping is replied to.
 	test.waitPacketOut(func(p *pong) {

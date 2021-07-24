@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common/math"
+	"github.com/tomochain/tomochain/common/math"
 )
 
 func TestBlockNumberJSONUnmarshal(t *testing.T) {

@@ -22,15 +22,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/event"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/event"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 const (
@@ -353,17 +353,17 @@ func (pool *TxPool) validateTx(ctx context.Context, tx *types.Transaction) error
 		return fmt.Errorf("Reject transaction with receiver in black-list: %v", tx.To().Hex())
 	}
 
-	// validate minFee slot for SdxZ
-	if tx.IsSdxZApplyTransaction() {
+	// validate minFee slot for TomoZ
+	if tx.IsTomoZApplyTransaction() {
 		copyState := pool.currentState(ctx).Copy()
-		if err := core.ValidateSdxZApplyTransaction(pool.chain, nil, copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
+		if err := core.ValidateTomoZApplyTransaction(pool.chain, nil, copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
 			return err
 		}
 	}
-	// validate balance slot, token decimal for SdxX
-	if tx.IsSdxXApplyTransaction() {
+	// validate balance slot, token decimal for TomoX
+	if tx.IsTomoXApplyTransaction() {
 		copyState := pool.currentState(ctx).Copy()
-		if err := core.ValidateSdxXApplyTransaction(pool.chain, nil, copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
+		if err := core.ValidateTomoXApplyTransaction(pool.chain, nil, copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
 			return err
 		}
 	}

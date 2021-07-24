@@ -18,14 +18,14 @@ package core
 
 import (
 	"bytes"
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
+	"github.com/tomochain/tomochain/core/rawdb"
 	"math/big"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/crypto/sha3"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/crypto/sha3"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 // Tests block header storage and retrieval operations.

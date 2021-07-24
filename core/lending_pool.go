@@ -24,17 +24,17 @@ import (
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/consensus/posv"
+	"github.com/tomochain/tomochain/consensus/posv"
 
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending/lendingstate"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/tomoxlending/lendingstate"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/event"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/event"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/params"
 	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
 )
 
@@ -71,7 +71,7 @@ type LendingPoolConfig struct {
 	Lifetime time.Duration // Maximum amount of time non-executable transaction are queued
 }
 
-// blockChain_sdxx add order state
+// blockChain_tomox add order state
 type blockChainLending interface {
 	CurrentBlock() *types.Block
 	GetBlock(hash common.Hash, number uint64) *types.Block
@@ -273,7 +273,7 @@ func (pool *LendingPool) loop() {
 // reset retrieves the current state of the blockchain and ensures the content
 // of the transaction pool is valid with regard to the chain state.
 func (pool *LendingPool) reset(oldHead, newblock *types.Block) {
-	if !pool.chainconfig.IsTIPSdxX(pool.chain.CurrentBlock().Number()) || pool.chain.Config().Posv == nil || pool.chain.CurrentBlock().NumberU64() <= pool.chain.Config().Posv.Epoch {
+	if !pool.chainconfig.IsTIPTomoX(pool.chain.CurrentBlock().Number()) || pool.chain.Config().Posv == nil || pool.chain.CurrentBlock().NumberU64() <= pool.chain.Config().Posv.Epoch {
 		return
 	}
 	// If we're reorging an old state, reinject all dropped transactions
@@ -518,12 +518,12 @@ func (pool *LendingPool) validateBalance(cloneStateDb *state.StateDB, cloneLendi
 	if !ok {
 		return ErrNotPoSV
 	}
-	sdxXServ := posvEngine.GetSdxXService()
+	tomoXServ := posvEngine.GetTomoXService()
 	lendingServ := posvEngine.GetLendingService()
-	if sdxXServ == nil {
-		return fmt.Errorf("sdxx not found in order validation")
+	if tomoXServ == nil {
+		return fmt.Errorf("tomox not found in order validation")
 	}
-	lendingTokenDecimal, err := sdxXServ.GetTokenDecimal(pool.chain, cloneStateDb, tx.LendingToken())
+	lendingTokenDecimal, err := tomoXServ.GetTokenDecimal(pool.chain, cloneStateDb, tx.LendingToken())
 	if err != nil {
 		return fmt.Errorf("validateOrder: failed to get lendingTokenDecimal. err: %v", err)
 	}
@@ -531,7 +531,7 @@ func (pool *LendingPool) validateBalance(cloneStateDb *state.StateDB, cloneLendi
 	if err != nil {
 		return err
 	}
-	tradingStateDb, err := sdxXServ.GetTradingState(pool.chain.CurrentBlock(), author)
+	tradingStateDb, err := tomoXServ.GetTradingState(pool.chain.CurrentBlock(), author)
 	if err != nil {
 		return fmt.Errorf("validateLending: failed to get tradingStateDb. Error: %v", err)
 	}
@@ -539,34 +539,34 @@ func (pool *LendingPool) validateBalance(cloneStateDb *state.StateDB, cloneLendi
 	// collateralPrice: price of collateral by LendingToken
 	// Eg: LendingToken: USD, CollateralToken: BTC
 	// collateralPrice = BTC/USD (eg: 8000 USD)
-	// lendTokenSDXPrice: price of lendingToken in SDX quote
-	var lendTokenSDXPrice, collateralPrice, collateralTokenDecimal *big.Int
+	// lendTokenTOMOPrice: price of lendingToken in TOMO quote
+	var lendTokenTOMOPrice, collateralPrice, collateralTokenDecimal *big.Int
 	if collateralToken.String() != lendingstate.EmptyAddress {
-		collateralTokenDecimal, err = sdxXServ.GetTokenDecimal(pool.chain, cloneStateDb, collateralToken)
+		collateralTokenDecimal, err = tomoXServ.GetTokenDecimal(pool.chain, cloneStateDb, collateralToken)
 		if err != nil {
 			return fmt.Errorf("validateOrder: failed to get collateralTokenDecimal. err: %v", err)
 		}
-		lendTokenSDXPrice, collateralPrice, err = lendingServ.GetCollateralPrices(pool.chain.CurrentHeader(), pool.chain, cloneStateDb, cloneTradingStateDb, collateralToken, tx.LendingToken())
+		lendTokenTOMOPrice, collateralPrice, err = lendingServ.GetCollateralPrices(pool.chain.CurrentHeader(), pool.chain, cloneStateDb, cloneTradingStateDb, collateralToken, tx.LendingToken())
 		if err != nil {
 			return err
 		}
-		if lendTokenSDXPrice == nil || lendTokenSDXPrice.Sign() <= 0 || collateralPrice == nil || collateralPrice.Sign() <= 0 {
-			log.Debug("ValidateLending: ErrInvalidCollateralPrice", "lendTokenSDXPrice", lendTokenSDXPrice, "collateralPrice", collateralPrice)
+		if lendTokenTOMOPrice == nil || lendTokenTOMOPrice.Sign() <= 0 || collateralPrice == nil || collateralPrice.Sign() <= 0 {
+			log.Debug("ValidateLending: ErrInvalidCollateralPrice", "lendTokenTOMOPrice", lendTokenTOMOPrice, "collateralPrice", collateralPrice)
 			return lendingstate.ErrInvalidCollateralPrice
 		}
 	}
-	if lendTokenSDXPrice == nil || lendTokenSDXPrice.Sign() == 0 {
-		if tx.LendingToken().String() == common.SdxNativeAddress {
-			lendTokenSDXPrice = common.BasePrice
+	if lendTokenTOMOPrice == nil || lendTokenTOMOPrice.Sign() == 0 {
+		if tx.LendingToken().String() == common.TomoNativeAddress {
+			lendTokenTOMOPrice = common.BasePrice
 		} else {
-			lendTokenSDXPrice, err = lendingServ.GetMediumTradePriceBeforeEpoch(pool.chain, cloneStateDb, cloneTradingStateDb, tx.LendingToken(), common.HexToAddress(common.SdxNativeAddress))
+			lendTokenTOMOPrice, err = lendingServ.GetMediumTradePriceBeforeEpoch(pool.chain, cloneStateDb, cloneTradingStateDb, tx.LendingToken(), common.HexToAddress(common.TomoNativeAddress))
 			if err != nil {
 				return err
 			}
 		}
 	}
-	isSdxXLendingFork := pool.chain.Config().IsTIPSdxXLending(pool.chain.CurrentHeader().Number)
-	if err := lendingstate.VerifyBalance(isSdxXLendingFork,
+	isTomoXLendingFork := pool.chain.Config().IsTIPTomoXLending(pool.chain.CurrentHeader().Number)
+	if err := lendingstate.VerifyBalance(isTomoXLendingFork,
 		cloneStateDb,
 		cloneLendingStateDb,
 		tx.Type(),
@@ -579,7 +579,7 @@ func (pool *LendingPool) validateBalance(cloneStateDb *state.StateDB, cloneLendi
 		tx.Quantity(),
 		lendingTokenDecimal,
 		collateralTokenDecimal,
-		lendTokenSDXPrice,
+		lendTokenTOMOPrice,
 		collateralPrice,
 		tx.Term(),
 		tx.LendingId(),
@@ -814,7 +814,7 @@ func (pool *LendingPool) AddRemotes(txs []*types.LendingTransaction) []error {
 
 // addTx enqueues a single transaction into the pool if it is valid.
 func (pool *LendingPool) addTx(tx *types.LendingTransaction, local bool) error {
-	if !pool.chainconfig.IsTIPSdxX(pool.chain.CurrentBlock().Number()) {
+	if !pool.chainconfig.IsTIPTomoX(pool.chain.CurrentBlock().Number()) {
 		return nil
 	}
 	tx.CacheHash()

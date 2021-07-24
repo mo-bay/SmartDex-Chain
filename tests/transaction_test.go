@@ -20,7 +20,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/params"
 )
 
 func TestTransaction(t *testing.T) {

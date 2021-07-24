@@ -28,31 +28,31 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/accounts/keystore"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/fdlimit"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/consensus/ethash"
-	"github.com/69th-byte/SmartDex-Chain/consensus/posv"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/eth"
-	"github.com/69th-byte/SmartDex-Chain/eth/downloader"
-	"github.com/69th-byte/SmartDex-Chain/eth/gasprice"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/metrics"
-	"github.com/69th-byte/SmartDex-Chain/node"
-	"github.com/69th-byte/SmartDex-Chain/p2p"
-	"github.com/69th-byte/SmartDex-Chain/p2p/discover"
-	"github.com/69th-byte/SmartDex-Chain/p2p/discv5"
-	"github.com/69th-byte/SmartDex-Chain/p2p/nat"
-	"github.com/69th-byte/SmartDex-Chain/p2p/netutil"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/sdxx"
-	whisper "github.com/69th-byte/SmartDex-Chain/whisper/whisperv6"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/accounts/keystore"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/fdlimit"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/consensus/ethash"
+	"github.com/tomochain/tomochain/consensus/posv"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/eth"
+	"github.com/tomochain/tomochain/eth/downloader"
+	"github.com/tomochain/tomochain/eth/gasprice"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/metrics"
+	"github.com/tomochain/tomochain/node"
+	"github.com/tomochain/tomochain/p2p"
+	"github.com/tomochain/tomochain/p2p/discover"
+	"github.com/tomochain/tomochain/p2p/discv5"
+	"github.com/tomochain/tomochain/p2p/nat"
+	"github.com/tomochain/tomochain/p2p/netutil"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/tomox"
+	whisper "github.com/tomochain/tomochain/whisper/whisperv6"
 	"gopkg.in/urfave/cli.v1"
 )
 
@@ -109,7 +109,7 @@ func NewApp(gitCommit, usage string) *cli.App {
 // are the same for all commands.
 
 var (
-	// Sdx flags.
+	// Tomo flags.
 	RollbackFlag = cli.StringFlag{
 		Name:  "rollback",
 		Usage: "Rollback chain at hash",
@@ -139,16 +139,16 @@ var (
 	}
 	NetworkIdFlag = cli.Uint64Flag{
 		Name:  "networkid",
-		Usage: "Network identifier (integer, 89=Sdxchain)",
+		Usage: "Network identifier (integer, 89=Tomochain)",
 		Value: eth.DefaultConfig.NetworkId,
 	}
 	TestnetFlag = cli.BoolFlag{
 		Name:  "testnet",
 		Usage: "Ropsten network: pre-configured proof-of-work test network",
 	}
-	SdxTestnetFlag = cli.BoolFlag{
-		Name:  "sdx-testnet",
-		Usage: "Sdx test network",
+	TomoTestnetFlag = cli.BoolFlag{
+		Name:  "tomo-testnet",
+		Usage: "Tomo test network",
 	}
 	RinkebyFlag = cli.BoolFlag{
 		Name:  "rinkeby",
@@ -204,10 +204,10 @@ var (
 		Name:  "lightkdf",
 		Usage: "Reduce key-derivation RAM & CPU usage at some expense of KDF strength",
 	}
-	// SdxX settings
-	SdxXEnabledFlag = cli.BoolFlag{
-		Name:  "sdxx",
-		Usage: "Enable the sdxX protocol",
+	// TomoX settings
+	TomoXEnabledFlag = cli.BoolFlag{
+		Name:  "tomox",
+		Usage: "Enable the tomoX protocol",
 	}
 	// Ethash settings
 	EthashCacheDirFlag = DirectoryFlag{
@@ -318,7 +318,7 @@ var (
 	TargetGasLimitFlag = cli.Uint64Flag{
 		Name:  "targetgaslimit",
 		Usage: "Target gas limit sets the artificial target gas floor for the blocks to mine",
-		Value: params.SdxGenesisGasLimit,
+		Value: params.TomoGenesisGasLimit,
 	}
 	EtherbaseFlag = cli.StringFlag{
 		Name:  "etherbase",
@@ -532,31 +532,31 @@ var (
 		Usage: "Minimum POW accepted",
 		Value: whisper.DefaultMinimumPoW,
 	}
-	SdxXDataDirFlag = DirectoryFlag{
-		Name:  "sdxx.datadir",
-		Usage: "Data directory for the SdxX databases",
-		Value: DirectoryString{filepath.Join(DataDirFlag.Value.String(), "sdxx")},
+	TomoXDataDirFlag = DirectoryFlag{
+		Name:  "tomox.datadir",
+		Usage: "Data directory for the TomoX databases",
+		Value: DirectoryString{filepath.Join(DataDirFlag.Value.String(), "tomox")},
 	}
-	SdxXDBEngineFlag = cli.StringFlag{
-		Name:  "sdxx.dbengine",
-		Usage: "Database engine for SdxX (leveldb, mongodb)",
+	TomoXDBEngineFlag = cli.StringFlag{
+		Name:  "tomox.dbengine",
+		Usage: "Database engine for TomoX (leveldb, mongodb)",
 		Value: "leveldb",
 	}
-	SdxXDBNameFlag = cli.StringFlag{
-		Name:  "sdxx.dbName",
-		Usage: "Database name for SdxX",
-		Value: "sdxdex",
+	TomoXDBNameFlag = cli.StringFlag{
+		Name:  "tomox.dbName",
+		Usage: "Database name for TomoX",
+		Value: "tomodex",
 	}
-	SdxXDBConnectionUrlFlag = cli.StringFlag{
-		Name:  "sdxx.dbConnectionUrl",
+	TomoXDBConnectionUrlFlag = cli.StringFlag{
+		Name:  "tomox.dbConnectionUrl",
 		Usage: "ConnectionUrl to database if dbEngine is mongodb. Host:port. If there are multiple instances, separated by comma. Eg: localhost:27017,localhost:27018",
 		Value: "localhost:27017",
 	}
-	SdxXDBReplicaSetNameFlag = cli.StringFlag{
-		Name:  "sdxx.dbReplicaSetName",
+	TomoXDBReplicaSetNameFlag = cli.StringFlag{
+		Name:  "tomox.dbReplicaSetName",
 		Usage: "ReplicaSetName if Master-Slave is setup",
 	}
-	SdxSlaveModeFlag = cli.BoolFlag{
+	TomoSlaveModeFlag = cli.BoolFlag{
 		Name:  "slave",
 		Usage: "Enable slave mode",
 	}
@@ -631,7 +631,7 @@ func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) {
 		return // already set, don't apply defaults.
 	case !ctx.GlobalIsSet(BootnodesFlag.Name):
 		urls = params.MainnetBootnodes
-	case ctx.GlobalBool(SdxTestnetFlag.Name):
+	case ctx.GlobalBool(TomoTestnetFlag.Name):
 		urls = params.TestnetBootnodes
 	}
 	cfg.BootstrapNodes = make([]*discover.Node, 0, len(urls))
@@ -761,7 +761,7 @@ func setIPC(ctx *cli.Context, cfg *node.Config) {
 }
 
 // MakeDatabaseHandles raises out the number of allowed file handles per process
-// for sdx and returns half of the allowance to assign to the database.
+// for tomo and returns half of the allowance to assign to the database.
 func MakeDatabaseHandles() int {
 	limit, err := fdlimit.Current()
 	if err != nil {
@@ -793,7 +793,7 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 	log.Warn("-------------------------------------------------------------------")
 	log.Warn("Referring to accounts by order in the keystore folder is dangerous!")
 	log.Warn("This functionality is deprecated and will be removed in the future!")
-	log.Warn("Please use explicit addresses! (can search via `sdx account list`)")
+	log.Warn("Please use explicit addresses! (can search via `tomo account list`)")
 	log.Warn("-------------------------------------------------------------------")
 
 	accs := ks.Accounts()
@@ -1044,39 +1044,39 @@ func SetShhConfig(ctx *cli.Context, stack *node.Node, cfg *whisper.Config) {
 	}
 }
 
-func SetSdxXConfig(ctx *cli.Context, cfg *sdxx.Config, sdxDataDir string) {
-	if ctx.GlobalIsSet(SdxXDataDirFlag.Name) {
-		cfg.DataDir = ctx.GlobalString(SdxXDataDirFlag.Name)
+func SetTomoXConfig(ctx *cli.Context, cfg *tomox.Config, tomoDataDir string) {
+	if ctx.GlobalIsSet(TomoXDataDirFlag.Name) {
+		cfg.DataDir = ctx.GlobalString(TomoXDataDirFlag.Name)
 	} else {
-		// default sdxx datadir: DATADIR/sdxx
-		defaultSdxXDataDir := filepath.Join(sdxDataDir, "sdxx")
+		// default tomox datadir: DATADIR/tomox
+		defaultTomoXDataDir := filepath.Join(tomoDataDir, "tomox")
 
-		filesInSdxXDefaultDir, _ := WalkMatch(defaultSdxXDataDir, "*.ldb")
+		filesInTomoXDefaultDir, _ := WalkMatch(defaultTomoXDataDir, "*.ldb")
 		filesInNodeDefaultDir, _ := WalkMatch(node.DefaultDataDir(), "*.ldb")
-		if len(filesInSdxXDefaultDir) == 0 && len(filesInNodeDefaultDir) > 0 {
+		if len(filesInTomoXDefaultDir) == 0 && len(filesInNodeDefaultDir) > 0 {
 			cfg.DataDir = node.DefaultDataDir()
 		} else {
-			cfg.DataDir = defaultSdxXDataDir
+			cfg.DataDir = defaultTomoXDataDir
 		}
 	}
-	log.Info("SDX datadir", "path", cfg.DataDir)
-	if ctx.GlobalIsSet(SdxXDBEngineFlag.Name) {
-		cfg.DBEngine = ctx.GlobalString(SdxXDBEngineFlag.Name)
+	log.Info("TomoX datadir", "path", cfg.DataDir)
+	if ctx.GlobalIsSet(TomoXDBEngineFlag.Name) {
+		cfg.DBEngine = ctx.GlobalString(TomoXDBEngineFlag.Name)
 	} else {
-		cfg.DBEngine = SdxXDBEngineFlag.Value
+		cfg.DBEngine = TomoXDBEngineFlag.Value
 	}
-	if ctx.GlobalIsSet(SdxXDBNameFlag.Name) {
-		cfg.DBName = ctx.GlobalString(SdxXDBNameFlag.Name)
+	if ctx.GlobalIsSet(TomoXDBNameFlag.Name) {
+		cfg.DBName = ctx.GlobalString(TomoXDBNameFlag.Name)
 	} else {
-		cfg.DBName = SdxXDBNameFlag.Value
+		cfg.DBName = TomoXDBNameFlag.Value
 	}
-	if ctx.GlobalIsSet(SdxXDBConnectionUrlFlag.Name) {
-		cfg.ConnectionUrl = ctx.GlobalString(SdxXDBConnectionUrlFlag.Name)
+	if ctx.GlobalIsSet(TomoXDBConnectionUrlFlag.Name) {
+		cfg.ConnectionUrl = ctx.GlobalString(TomoXDBConnectionUrlFlag.Name)
 	} else {
-		cfg.ConnectionUrl = SdxXDBConnectionUrlFlag.Value
+		cfg.ConnectionUrl = TomoXDBConnectionUrlFlag.Value
 	}
-	if ctx.GlobalIsSet(SdxXDBReplicaSetNameFlag.Name) {
-		cfg.ReplicaSetName = ctx.GlobalString(SdxXDBReplicaSetNameFlag.Name)
+	if ctx.GlobalIsSet(TomoXDBReplicaSetNameFlag.Name) {
+		cfg.ReplicaSetName = ctx.GlobalString(TomoXDBReplicaSetNameFlag.Name)
 	}
 }
 
@@ -1142,7 +1142,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 		cfg.EnablePreimageRecording = ctx.GlobalBool(VMEnableDebugFlag.Name)
 	}
 	if ctx.GlobalIsSet(StoreRewardFlag.Name) {
-		common.StoreRewardFolder = filepath.Join(stack.DataDir(), "sdx", "rewards")
+		common.StoreRewardFolder = filepath.Join(stack.DataDir(), "tomo", "rewards")
 		if _, err := os.Stat(common.StoreRewardFolder); os.IsNotExist(err) {
 			os.Mkdir(common.StoreRewardFolder, os.ModePerm)
 		}
@@ -1288,11 +1288,11 @@ func MakeConsolePreloads(ctx *cli.Context) []string {
 // This is a temporary function used for migrating old command/flags to the
 // new format.
 //
-// e.g. sdx account new --keystore /tmp/mykeystore --lightkdf
+// e.g. tomo account new --keystore /tmp/mykeystore --lightkdf
 //
 // is equivalent after calling this method with:
 //
-// sdx --keystore /tmp/mykeystore --lightkdf account new
+// tomo --keystore /tmp/mykeystore --lightkdf account new
 //
 // This allows the use of the existing configuration functionality.
 // When all flags are migrated this function can be removed and the existing

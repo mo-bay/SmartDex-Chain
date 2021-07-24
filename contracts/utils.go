@@ -1,5 +1,4 @@
-// Copyright 2019 The Tomochain Authors
-// Copyright (c) 2021 Sdxchain
+// Copyright (c) 2018 Tomochain
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -31,21 +30,21 @@ import (
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi/bind"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/consensus/posv"
-	"github.com/69th-byte/SmartDex-Chain/contracts/blocksigner/contract"
-	randomizeContract "github.com/69th-byte/SmartDex-Chain/contracts/randomize/contract"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	stateDatabase "github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/accounts/abi/bind"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/consensus/posv"
+	"github.com/tomochain/tomochain/contracts/blocksigner/contract"
+	randomizeContract "github.com/tomochain/tomochain/contracts/randomize/contract"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/state"
+	stateDatabase "github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/params"
 )
 
 const (
@@ -231,7 +230,7 @@ func GetSignersByExecutingEVM(addrBlockSigner common.Address, client bind.Contra
 
 // Get random from randomize contract.
 func GetRandomizeFromContract(client bind.ContractBackend, addrMasternode common.Address) (int64, error) {
-	randomize, err := randomizeContract.NewSdxRandomize(common.HexToAddress(common.RandomizeSMC), client)
+	randomize, err := randomizeContract.NewTomoRandomize(common.HexToAddress(common.RandomizeSMC), client)
 	if err != nil {
 		log.Error("Fail to get instance of randomize", "error", err)
 	}

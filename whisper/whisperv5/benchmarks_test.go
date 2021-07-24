@@ -19,7 +19,7 @@ package whisperv5
 import (
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/crypto"
+	"github.com/tomochain/tomochain/crypto"
 )
 
 func BenchmarkDeriveKeyMaterial(b *testing.B) {

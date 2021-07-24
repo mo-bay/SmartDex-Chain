@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/metrics"
+	"github.com/tomochain/tomochain/metrics"
 )
 
 // a regexp for extracting the unit from time.Duration.String

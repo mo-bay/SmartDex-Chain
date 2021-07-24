@@ -23,8 +23,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/metrics"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/metrics"
 )
 
 //metrics variables

@@ -20,32 +20,31 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/tomochain/tomochain/tomox/tradingstate"
+	"github.com/tomochain/tomochain/tomoxlending"
 	"io/ioutil"
 	"math/big"
 	"path/filepath"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxx/tradingstate"
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending"
+	"github.com/tomochain/tomochain/tomox"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxx"
-
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/bloombits"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/eth/downloader"
-	"github.com/69th-byte/SmartDex-Chain/eth/gasprice"
-	"github.com/69th-byte/SmartDex-Chain/ethclient"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/event"
-	"github.com/69th-byte/SmartDex-Chain/light"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/math"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/bloombits"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/eth/downloader"
+	"github.com/tomochain/tomochain/eth/gasprice"
+	"github.com/tomochain/tomochain/ethclient"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/event"
+	"github.com/tomochain/tomochain/light"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rpc"
 )
 
 type LesApiBackend struct {
@@ -106,10 +105,10 @@ func (b *LesApiBackend) GetTd(blockHash common.Hash) *big.Int {
 	return b.eth.blockchain.GetTdByHash(blockHash)
 }
 
-func (b *LesApiBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, sdxxState *tradingstate.TradingStateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error) {
+func (b *LesApiBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, tomoxState *tradingstate.TradingStateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error) {
 	state.SetBalance(msg.From(), math.MaxBig256)
 	context := core.NewEVMContext(msg, header, b.eth.blockchain, nil)
-	return vm.NewEVM(context, state, sdxxState, b.eth.chainConfig, vmCfg), state.Error, nil
+	return vm.NewEVM(context, state, tomoxState, b.eth.chainConfig, vmCfg), state.Error, nil
 }
 
 func (b *LesApiBackend) SendTx(ctx context.Context, signedTx *types.Transaction) error {
@@ -275,13 +274,13 @@ func (b *LesApiBackend) AreTwoBlockSamePath(bh1 common.Hash, bh2 common.Hash) bo
 
 // GetOrderNonce get order nonce
 func (b *LesApiBackend) GetOrderNonce(address common.Hash) (uint64, error) {
-	return 0, errors.New("cannot find sdxx service")
+	return 0, errors.New("cannot find tomox service")
 }
 
-func (b *LesApiBackend) SdxxService() *sdxx.SdxX {
+func (b *LesApiBackend) TomoxService() *tomox.TomoX {
 	return nil
 }
 
-func (b *LesApiBackend) LendingService() *sdxxlending.Lending {
+func (b *LesApiBackend) LendingService() *tomoxlending.Lending {
 	return nil
 }

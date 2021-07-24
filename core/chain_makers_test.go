@@ -18,14 +18,14 @@ package core
 
 import (
 	"fmt"
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
+	"github.com/tomochain/tomochain/core/rawdb"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/consensus/ethash"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/consensus/ethash"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/params"
 )
 
 func ExampleGenerateChain() {

@@ -17,8 +17,8 @@
 package eth
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/metrics"
-	"github.com/69th-byte/SmartDex-Chain/p2p"
+	"github.com/tomochain/tomochain/metrics"
+	"github.com/tomochain/tomochain/p2p"
 )
 
 var (

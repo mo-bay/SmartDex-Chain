@@ -5,9 +5,9 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/params"
 )
 
 func TestGetM1M2FromCheckpointHeader(t *testing.T) {

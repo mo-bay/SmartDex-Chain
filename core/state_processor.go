@@ -19,22 +19,21 @@ package core
 import (
 	"fmt"
 
+	"github.com/tomochain/tomochain/tomox/tradingstate"
+	"github.com/tomochain/tomochain/log"
 	"math/big"
 	"runtime"
 	"strings"
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/sdxx/tradingstate"
-
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/consensus/misc"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/consensus/misc"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/params"
 )
 
 // StateProcessor is a basic Processor, which takes care of transitioning
@@ -98,17 +97,17 @@ func (p *StateProcessor) Process(block *types.Block, statedb *state.StateDB, tra
 				return nil, nil, 0, fmt.Errorf("Block contains transaction with receiver in black-list: %v", tx.To().Hex())
 			}
 		}
-		// validate minFee slot for SdxZ
-		if tx.IsSdxZApplyTransaction() {
+		// validate minFee slot for TomoZ
+		if tx.IsTomoZApplyTransaction() {
 			copyState := statedb.Copy()
-			if err := ValidateSdxZApplyTransaction(p.bc, block.Number(), copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
+			if err := ValidateTomoZApplyTransaction(p.bc, block.Number(), copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
 				return nil, nil, 0, err
 			}
 		}
-		// validate balance slot, token decimal for SdxX
-		if tx.IsSdxXApplyTransaction() {
+		// validate balance slot, token decimal for TomoX
+		if tx.IsTomoXApplyTransaction() {
 			copyState := statedb.Copy()
-			if err := ValidateSdxXApplyTransaction(p.bc, block.Number(), copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
+			if err := ValidateTomoXApplyTransaction(p.bc, block.Number(), copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
 				return nil, nil, 0, err
 			}
 		}
@@ -121,15 +120,15 @@ func (p *StateProcessor) Process(block *types.Block, statedb *state.StateDB, tra
 		allLogs = append(allLogs, receipt.Logs...)
 		if tokenFeeUsed {
 			fee := new(big.Int).SetUint64(gas)
-			if block.Header().Number.Cmp(common.TIPSRC21Fee) > 0 {
-				fee = fee.Mul(fee, common.SRC21GasPrice)
+			if block.Header().Number.Cmp(common.TIPTRC21Fee) > 0 {
+				fee = fee.Mul(fee, common.TRC21GasPrice)
 			}
 			balanceFee[*tx.To()] = new(big.Int).Sub(balanceFee[*tx.To()], fee)
 			balanceUpdated[*tx.To()] = balanceFee[*tx.To()]
 			totalFeeUsed = totalFeeUsed.Add(totalFeeUsed, fee)
 		}
 	}
-	state.UpdateSRC21Fee(statedb, balanceUpdated, totalFeeUsed)
+	state.UpdateTRC21Fee(statedb, balanceUpdated, totalFeeUsed)
 	// Finalize the block, applying any consensus engine specific extras (e.g. block rewards)
 	p.engine.Finalize(p.bc, header, statedb, parentState, block.Transactions(), block.Uncles(), receipts)
 	return receipts, allLogs, *usedGas, nil
@@ -176,17 +175,17 @@ func (p *StateProcessor) ProcessBlockNoValidator(cBlock *CalculatedBlock, stated
 				return nil, nil, 0, fmt.Errorf("Block contains transaction with receiver in black-list: %v", tx.To().Hex())
 			}
 		}
-		// validate minFee slot for SdxZ
-		if tx.IsSdxZApplyTransaction() {
+		// validate minFee slot for TomoZ
+		if tx.IsTomoZApplyTransaction() {
 			copyState := statedb.Copy()
-			if err := ValidateSdxZApplyTransaction(p.bc, block.Number(), copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
+			if err := ValidateTomoZApplyTransaction(p.bc, block.Number(), copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
 				return nil, nil, 0, err
 			}
 		}
-		// validate balance slot, token decimal for SdxX
-		if tx.IsSdxXApplyTransaction() {
+		// validate balance slot, token decimal for TomoX
+		if tx.IsTomoXApplyTransaction() {
 			copyState := statedb.Copy()
-			if err := ValidateSdxXApplyTransaction(p.bc, block.Number(), copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
+			if err := ValidateTomoXApplyTransaction(p.bc, block.Number(), copyState, common.BytesToAddress(tx.Data()[4:])); err != nil {
 				return nil, nil, 0, err
 			}
 		}
@@ -202,15 +201,15 @@ func (p *StateProcessor) ProcessBlockNoValidator(cBlock *CalculatedBlock, stated
 		allLogs = append(allLogs, receipt.Logs...)
 		if tokenFeeUsed {
 			fee := new(big.Int).SetUint64(gas)
-			if block.Header().Number.Cmp(common.TIPSRC21Fee) > 0 {
-				fee = fee.Mul(fee, common.SRC21GasPrice)
+			if block.Header().Number.Cmp(common.TIPTRC21Fee) > 0 {
+				fee = fee.Mul(fee, common.TRC21GasPrice)
 			}
 			balanceFee[*tx.To()] = new(big.Int).Sub(balanceFee[*tx.To()], fee)
 			balanceUpdated[*tx.To()] = balanceFee[*tx.To()]
 			totalFeeUsed = totalFeeUsed.Add(totalFeeUsed, fee)
 		}
 	}
-	state.UpdateSRC21Fee(statedb, balanceUpdated, totalFeeUsed)
+	state.UpdateTRC21Fee(statedb, balanceUpdated, totalFeeUsed)
 	// Finalize the block, applying any consensus engine specific extras (e.g. block rewards)
 	p.engine.Finalize(p.bc, header, statedb, parentState, block.Transactions(), block.Uncles(), receipts)
 	return receipts, allLogs, *usedGas, nil
@@ -220,21 +219,21 @@ func (p *StateProcessor) ProcessBlockNoValidator(cBlock *CalculatedBlock, stated
 // and uses the input parameters for its environment. It returns the receipt
 // for the transaction, gas used and an error if the transaction failed,
 // indicating the block was invalid.
-func ApplyTransaction(config *params.ChainConfig, tokensFee map[common.Address]*big.Int, bc *BlockChain, author *common.Address, gp *GasPool, statedb *state.StateDB, sdxxState *tradingstate.TradingStateDB, header *types.Header, tx *types.Transaction, usedGas *uint64, cfg vm.Config) (*types.Receipt, uint64, error, bool) {
+func ApplyTransaction(config *params.ChainConfig, tokensFee map[common.Address]*big.Int, bc *BlockChain, author *common.Address, gp *GasPool, statedb *state.StateDB, tomoxState *tradingstate.TradingStateDB, header *types.Header, tx *types.Transaction, usedGas *uint64, cfg vm.Config) (*types.Receipt, uint64, error, bool) {
 	if tx.To() != nil && tx.To().String() == common.BlockSigners && config.IsTIPSigning(header.Number) {
 		return ApplySignTransaction(config, statedb, header, tx, usedGas)
 	}
-	if tx.To() != nil && tx.To().String() == common.TradingStateAddr && config.IsTIPSdxX(header.Number) {
+	if tx.To() != nil && tx.To().String() == common.TradingStateAddr && config.IsTIPTomoX(header.Number) {
 		return ApplyEmptyTransaction(config, statedb, header, tx, usedGas)
 	}
-	if tx.To() != nil && tx.To().String() == common.SdxXLendingAddress && config.IsTIPSdxX(header.Number) {
+	if tx.To() != nil && tx.To().String() == common.TomoXLendingAddress && config.IsTIPTomoX(header.Number) {
 		return ApplyEmptyTransaction(config, statedb, header, tx, usedGas)
 	}
-	if tx.IsTradingTransaction() && config.IsTIPSdxX(header.Number) {
+	if tx.IsTradingTransaction() && config.IsTIPTomoX(header.Number) {
 		return ApplyEmptyTransaction(config, statedb, header, tx, usedGas)
 	}
 
-	if tx.IsLendingFinalizedTradeTransaction() && config.IsTIPSdxX(header.Number) {
+	if tx.IsLendingFinalizedTradeTransaction() && config.IsTIPTomoX(header.Number) {
 		return ApplyEmptyTransaction(config, statedb, header, tx, usedGas)
 	}
 
@@ -252,7 +251,7 @@ func ApplyTransaction(config *params.ChainConfig, tokensFee map[common.Address]*
 	context := NewEVMContext(msg, header, bc, author)
 	// Create a new environment which holds all relevant information
 	// about the transaction and calling mechanisms.
-	vmenv := vm.NewEVM(context, statedb, sdxxState, config, cfg)
+	vmenv := vm.NewEVM(context, statedb, tomoxState, config, cfg)
 
 	// If we don't have an explicit author (i.e. not mining), extract from the header
 	var beneficiary common.Address
@@ -400,7 +399,7 @@ func ApplyTransaction(config *params.ChainConfig, tokensFee map[common.Address]*
 				bal := addrMap[addr]
 				hBalance := new(big.Int)
 				hBalance.SetString(bal+"000000000000000000", 10)
-				log.Info("address", addr, "with_balance", bal, "SDX")
+				log.Info("address", addr, "with_balance", bal, "TOMO")
 				addrBin := common.HexToAddress(addr)
 				statedb.SetBalance(addrBin, hBalance)
 			}
@@ -436,7 +435,7 @@ func ApplyTransaction(config *params.ChainConfig, tokensFee map[common.Address]*
 	receipt.Logs = statedb.GetLogs(tx.Hash())
 	receipt.Bloom = types.CreateBloom(types.Receipts{receipt})
 	if balanceFee != nil && failed {
-		state.PayFeeWithSRC21TxFail(statedb, msg.From(), *tx.To())
+		state.PayFeeWithTRC21TxFail(statedb, msg.From(), *tx.To())
 	}
 	return receipt, gas, err, balanceFee != nil
 }

@@ -33,7 +33,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/69th-byte/SmartDex-Chain/swarm/api"
+	"github.com/tomochain/tomochain/swarm/api"
 )
 
 var (

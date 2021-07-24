@@ -17,7 +17,7 @@
 package fuse
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/swarm/api"
+	"github.com/tomochain/tomochain/swarm/api"
 	"sync"
 	"time"
 )

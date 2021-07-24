@@ -24,10 +24,10 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/log"
 )
 
 // Seal implements consensus.Engine, attempting to find a nonce that satisfies

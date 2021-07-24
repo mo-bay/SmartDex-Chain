@@ -24,10 +24,10 @@ import (
 	"math/big"
 	"sync/atomic"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 //go:generate gencodec -type txdata -field-override txdataMarshaling -out gen_tx_json.go
@@ -36,10 +36,10 @@ var (
 	ErrInvalidSig               = errors.New("invalid transaction v, r, s values")
 	errNoSigner                 = errors.New("missing signing methods")
 	skipNonceDestinationAddress = map[string]bool{
-		common.SdxXAddr:                         true,
-		common.TradingStateAddr:                 true,
-		common.SdxXLendingAddress:               true,
-		common.SdxXLendingFinalizedTradeAddress: true,
+		common.TomoXAddr:                         true,
+		common.TradingStateAddr:                  true,
+		common.TomoXLendingAddress:               true,
+		common.TomoXLendingFinalizedTradeAddress: true,
 	}
 )
 
@@ -261,10 +261,10 @@ func (tx *Transaction) AsMessage(s Signer, balanceFee *big.Int, number *big.Int)
 	var err error
 	msg.from, err = Sender(s, tx)
 	if balanceFee != nil {
-		if number.Cmp(common.TIPSRC21Fee) > 0 {
-			msg.gasPrice = common.SRC21GasPrice
+		if number.Cmp(common.TIPTRC21Fee) > 0 {
+			msg.gasPrice = common.TRC21GasPrice
 		} else {
-			msg.gasPrice = common.SRC21GasPriceBefore
+			msg.gasPrice = common.TRC21GasPriceBefore
 		}
 	}
 	return msg, err
@@ -290,8 +290,8 @@ func (tx *Transaction) Cost() *big.Int {
 }
 
 // Cost returns amount + gasprice * gaslimit.
-func (tx *Transaction) SRC21Cost() *big.Int {
-	total := new(big.Int).Mul(common.SRC21GasPrice, new(big.Int).SetUint64(tx.data.GasLimit))
+func (tx *Transaction) TRC21Cost() *big.Int {
+	total := new(big.Int).Mul(common.TRC21GasPrice, new(big.Int).SetUint64(tx.data.GasLimit))
 	total.Add(total, tx.data.Amount)
 	return total
 }
@@ -312,7 +312,7 @@ func (tx *Transaction) IsTradingTransaction() bool {
 		return false
 	}
 
-	if tx.To().String() != common.SdxXAddr {
+	if tx.To().String() != common.TomoXAddr {
 		return false
 	}
 
@@ -324,7 +324,7 @@ func (tx *Transaction) IsLendingTransaction() bool {
 		return false
 	}
 
-	if tx.To().String() != common.SdxXLendingAddress {
+	if tx.To().String() != common.TomoXLendingAddress {
 		return false
 	}
 	return true
@@ -335,7 +335,7 @@ func (tx *Transaction) IsLendingFinalizedTradeTransaction() bool {
 		return false
 	}
 
-	if tx.To().String() != common.SdxXLendingFinalizedTradeAddress {
+	if tx.To().String() != common.TomoXLendingFinalizedTradeAddress {
 		return false
 	}
 	return true
@@ -411,14 +411,14 @@ func (tx *Transaction) IsVotingTransaction() (bool, *common.Address) {
 	return b, nil
 }
 
-func (tx *Transaction) IsSdxXApplyTransaction() bool {
+func (tx *Transaction) IsTomoXApplyTransaction() bool {
 	if tx.To() == nil {
 		return false
 	}
 
-	addr := common.SdxXListingSMC
+	addr := common.TomoXListingSMC
 	if common.IsTestnet {
-		addr = common.SdxXListingSMCTestNet
+		addr = common.TomoXListingSMCTestNet
 	}
 	if tx.To().String() != addr.String() {
 		return false
@@ -426,7 +426,7 @@ func (tx *Transaction) IsSdxXApplyTransaction() bool {
 
 	method := common.ToHex(tx.Data()[0:4])
 
-	if method != common.SdxXApplyMethod {
+	if method != common.TomoXApplyMethod {
 		return false
 	}
 
@@ -438,21 +438,21 @@ func (tx *Transaction) IsSdxXApplyTransaction() bool {
 	return true
 }
 
-func (tx *Transaction) IsSdxZApplyTransaction() bool {
+func (tx *Transaction) IsTomoZApplyTransaction() bool {
 	if tx.To() == nil {
 		return false
 	}
 
-	addr := common.SRC21IssuerSMC
+	addr := common.TRC21IssuerSMC
 	if common.IsTestnet {
-		addr = common.SRC21IssuerSMCTestNet
+		addr = common.TRC21IssuerSMCTestNet
 	}
 	if tx.To().String() != addr.String() {
 		return false
 	}
 
 	method := common.ToHex(tx.Data()[0:4])
-	if method != common.SdxZApplyMethod {
+	if method != common.TomoZApplyMethod {
 		return false
 	}
 
@@ -571,14 +571,14 @@ func (s TxByPrice) Less(i, j int) bool {
 	i_price := s.txs[i].data.Price
 	if s.txs[i].To() != nil {
 		if _, ok := s.payersSwap[*s.txs[i].To()]; ok {
-			i_price = common.SRC21GasPrice
+			i_price = common.TRC21GasPrice
 		}
 	}
 
 	j_price := s.txs[j].data.Price
 	if s.txs[j].To() != nil {
 		if _, ok := s.payersSwap[*s.txs[j].To()]; ok {
-			j_price = common.SRC21GasPrice
+			j_price = common.TRC21GasPrice
 		}
 	}
 	return i_price.Cmp(j_price) > 0
@@ -698,7 +698,7 @@ type Message struct {
 
 func NewMessage(from common.Address, to *common.Address, nonce uint64, amount *big.Int, gasLimit uint64, gasPrice *big.Int, data []byte, checkNonce bool, balanceTokenFee *big.Int) Message {
 	if balanceTokenFee != nil {
-		gasPrice = common.SRC21GasPrice
+		gasPrice = common.TRC21GasPrice
 	}
 	return Message{
 		from:            from,

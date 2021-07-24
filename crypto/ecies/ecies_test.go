@@ -39,7 +39,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/crypto"
+	"github.com/tomochain/tomochain/crypto"
 )
 
 //var dumpEnc bool

@@ -17,7 +17,7 @@
 package vm
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/params"
 )
 
 func minSwapStack(n int) int {

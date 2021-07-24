@@ -27,7 +27,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/69th-byte/SmartDex-Chain/common/math"
+	"github.com/tomochain/tomochain/common/math"
 	"gopkg.in/urfave/cli.v1"
 )
 

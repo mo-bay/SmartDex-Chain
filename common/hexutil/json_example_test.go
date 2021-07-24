@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
+	"github.com/tomochain/tomochain/common/hexutil"
 )
 
 type MyType [5]byte

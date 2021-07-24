@@ -5,7 +5,7 @@ package whisperv5
 import (
 	"encoding/json"
 
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
+	"github.com/tomochain/tomochain/common/hexutil"
 )
 
 var _ = (*newMessageOverride)(nil)

@@ -2,20 +2,20 @@ FROM golang:1.12-alpine as builder
 
 RUN apk add --no-cache make gcc musl-dev linux-headers git
 
-ADD . /sdx
-RUN cd /sdx && make sdx
+ADD . /tomochain
+RUN cd /tomochain && make tomo
 
 FROM alpine:latest
 
-WORKDIR /SmartDex-Chain
+WORKDIR /tomochain
 
-COPY --from=builder /SmartDex-Chain/build/bin/sdx /usr/local/bin/sdx
+COPY --from=builder /tomochain/build/bin/tomo /usr/local/bin/tomo
 
-RUN chmod +x /usr/local/bin/sdx
+RUN chmod +x /usr/local/bin/tomo
 
 EXPOSE 8545
 EXPOSE 30303
 
-ENTRYPOINT ["/usr/local/bin/sdx"]
+ENTRYPOINT ["/usr/local/bin/tomo"]
 
 CMD ["--help"]

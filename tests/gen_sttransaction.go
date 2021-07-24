@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/common/math"
 )
 
 var _ = (*stTransactionMarshaling)(nil)

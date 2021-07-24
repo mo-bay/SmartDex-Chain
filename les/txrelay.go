@@ -19,8 +19,8 @@ package les
 import (
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/types"
 )
 
 type ltrInfo struct {

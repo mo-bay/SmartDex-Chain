@@ -1,5 +1,4 @@
-// Copyright 2019 The Tomochain Authors
-// Copyright (c) 2021 Sdxchain
+// Copyright (c) 2018 Tomochain
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -18,18 +17,17 @@ package core
 
 import (
 	"fmt"
+	ethereum "github.com/tomochain/tomochain"
+	"github.com/tomochain/tomochain/accounts/abi"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/contracts/tomox/contract"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/log"
 	"math/big"
 	"math/rand"
 	"strings"
-
-	ethereum "github.com/69th-byte/SmartDex-Chain"
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/contracts/sdxx/contract"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/log"
 )
 
 const (
@@ -101,7 +99,7 @@ func CallContractWithState(call ethereum.CallMsg, chain consensus.ChainContext, 
 	}
 	// Execute the call.
 	msg := callmsg{call}
-	feeCapacity := state.GetSRC21FeeCapacityFromState(statedb)
+	feeCapacity := state.GetTRC21FeeCapacityFromState(statedb)
 	if msg.To() != nil {
 		if value, ok := feeCapacity[*msg.To()]; ok {
 			msg.CallMsg.BalanceTokenFee = value
@@ -121,16 +119,16 @@ func CallContractWithState(call ethereum.CallMsg, chain consensus.ChainContext, 
 }
 
 // make sure that balance of token is at slot 0
-func ValidateSdxXApplyTransaction(chain consensus.ChainContext, blockNumber *big.Int, copyState *state.StateDB, tokenAddr common.Address) error {
+func ValidateTomoXApplyTransaction(chain consensus.ChainContext, blockNumber *big.Int, copyState *state.StateDB, tokenAddr common.Address) error {
 	if blockNumber == nil || blockNumber.Sign() <= 0 {
 		blockNumber = chain.CurrentHeader().Number
 	}
-	if !chain.Config().IsTIPSdxX(blockNumber) {
+	if !chain.Config().IsTIPTomoX(blockNumber) {
 		return nil
 	}
-	contractABI, err := GetTokenAbi(contract.SRC21ABI)
+	contractABI, err := GetTokenAbi(contract.TRC21ABI)
 	if err != nil {
-		return fmt.Errorf("ValidateSdxXApplyTransaction: cannot parse ABI. Err: %v", err)
+		return fmt.Errorf("ValidateTomoXApplyTransaction: cannot parse ABI. Err: %v", err)
 	}
 	if err := ValidateBalanceSlot(chain, copyState, tokenAddr, contractABI); err != nil {
 		return err
@@ -143,16 +141,16 @@ func ValidateSdxXApplyTransaction(chain consensus.ChainContext, blockNumber *big
 
 // make sure that balance of token is at slot 0
 // make sure that minFee of token is at slot 1
-func ValidateSdxZApplyTransaction(chain consensus.ChainContext, blockNumber *big.Int, copyState *state.StateDB, tokenAddr common.Address) error {
+func ValidateTomoZApplyTransaction(chain consensus.ChainContext, blockNumber *big.Int, copyState *state.StateDB, tokenAddr common.Address) error {
 	if blockNumber == nil || blockNumber.Sign() <= 0 {
 		blockNumber = chain.CurrentHeader().Number
 	}
-	if !chain.Config().IsTIPSdxX(blockNumber) {
+	if !chain.Config().IsTIPTomoX(blockNumber) {
 		return nil
 	}
-	contractABI, err := GetTokenAbi(contract.SRC21ABI)
+	contractABI, err := GetTokenAbi(contract.TRC21ABI)
 	if err != nil {
-		return fmt.Errorf("ValidateSdxZApplyTransaction: cannot parse ABI. Err: %v", err)
+		return fmt.Errorf("ValidateTomoZApplyTransaction: cannot parse ABI. Err: %v", err)
 	}
 	// verify balance slot
 	if err := ValidateBalanceSlot(chain, copyState, tokenAddr, contractABI); err != nil {
@@ -167,8 +165,8 @@ func ValidateSdxZApplyTransaction(chain consensus.ChainContext, blockNumber *big
 }
 
 func SetRandomBalance(copyState *state.StateDB, tokenAddr, addr common.Address, randomValue *big.Int) {
-	slotBalanceSrc21 := state.SlotSRC21Token["balances"]
-	balanceKey := state.GetLocMappingAtKey(addr.Hash(), slotBalanceSrc21)
+	slotBalanceTrc21 := state.SlotTRC21Token["balances"]
+	balanceKey := state.GetLocMappingAtKey(addr.Hash(), slotBalanceTrc21)
 	copyState.SetState(tokenAddr, common.BigToHash(balanceKey), common.BytesToHash(randomValue.Bytes()))
 }
 
@@ -179,11 +177,11 @@ func ValidateBalanceSlot(chain consensus.ChainContext, copyState *state.StateDB,
 	result, err := RunContract(chain, copyState, tokenAddr, contractABI, balanceOfFunction, addr)
 
 	if err != nil || result == nil {
-		return fmt.Errorf("cannot get balance at slot %v . Token: %s . Err: %v", state.SlotSRC21Token["balances"], tokenAddr.Hex(), err)
+		return fmt.Errorf("cannot get balance at slot %v . Token: %s . Err: %v", state.SlotTRC21Token["balances"], tokenAddr.Hex(), err)
 	}
 	balance, ok := result.(*big.Int)
 	if !ok {
-		return fmt.Errorf("invalid balance at slot %v . Token: %s . GotBalance: %v . ResultType: %T", state.SlotSRC21Token["balances"], tokenAddr.Hex(), result, result)
+		return fmt.Errorf("invalid balance at slot %v . Token: %s . GotBalance: %v . ResultType: %T", state.SlotTRC21Token["balances"], tokenAddr.Hex(), result, result)
 	}
 	if balance.Cmp(randBalance) != 0 {
 		log.Debug("invalid balance slot", "balance_set_at_slot_0", randBalance, "balance_get_from_abi", balance)
@@ -194,16 +192,16 @@ func ValidateBalanceSlot(chain consensus.ChainContext, copyState *state.StateDB,
 
 func ValidateMinFeeSlot(chain consensus.ChainContext, copyState *state.StateDB, tokenAddr common.Address, contractABI *abi.ABI) error {
 	randomValue := new(big.Int).SetInt64(int64(rand.Intn(1000000000)))
-	slotMinFeeSrc21 := state.SlotSRC21Token["minFee"]
-	copyState.SetState(tokenAddr, common.BigToHash(new(big.Int).SetUint64(slotMinFeeSrc21)), common.BytesToHash(randomValue.Bytes()))
+	slotMinFeeTrc21 := state.SlotTRC21Token["minFee"]
+	copyState.SetState(tokenAddr, common.BigToHash(new(big.Int).SetUint64(slotMinFeeTrc21)), common.BytesToHash(randomValue.Bytes()))
 
 	result, err := RunContract(chain, copyState, tokenAddr, contractABI, minFeeFunction)
 	if err != nil || result == nil {
-		return fmt.Errorf("cannot get minFee at slot %v . Token: %s. Err: %v", state.SlotSRC21Token["minFee"], tokenAddr.Hex(), err)
+		return fmt.Errorf("cannot get minFee at slot %v . Token: %s. Err: %v", state.SlotTRC21Token["minFee"], tokenAddr.Hex(), err)
 	}
 	minFee, ok := result.(*big.Int)
 	if !ok {
-		return fmt.Errorf("invalid minFee at slot %v . Token: %s . GotMinFee: %v . ResultType: %T", state.SlotSRC21Token["minFee"], tokenAddr.Hex(), result, result)
+		return fmt.Errorf("invalid minFee at slot %v . Token: %s . GotMinFee: %v . ResultType: %T", state.SlotTRC21Token["minFee"], tokenAddr.Hex(), result, result)
 	}
 	if minFee.Cmp(randomValue) != 0 {
 		log.Debug("invalid minFee slot", "minFee_set_at_slot_1", randomValue, "minFee_get_from_abi", minFee)

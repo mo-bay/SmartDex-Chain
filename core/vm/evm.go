@@ -17,15 +17,15 @@
 package vm
 
 import (
+	"github.com/tomochain/tomochain/tomox/tradingstate"
 	"errors"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/sdxx/tradingstate"
+	"github.com/tomochain/tomochain/params"
 	"math/big"
 	"sync/atomic"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/crypto"
 )
 
 // emptyCodeHash is used by create to ensure deployment is disallowed to already
@@ -54,10 +54,10 @@ func run(evm *EVM, contract *Contract, input []byte, readOnly bool) ([]byte, err
 		}
 		if p := precompiles[*contract.CodeAddr]; p != nil {
 			switch p.(type) {
-			case *sdxxEpochPrice:
-				p.(*sdxxEpochPrice).SetTradingState(evm.tradingStateDB)
-			case *sdxxLastPrice:
-				p.(*sdxxLastPrice).SetTradingState(evm.tradingStateDB)
+			case *tomoxEpochPrice:
+				p.(*tomoxEpochPrice).SetTradingState(evm.tradingStateDB)
+			case *tomoxLastPrice:
+				p.(*tomoxLastPrice).SetTradingState(evm.tradingStateDB)
 			}
 			return RunPrecompiledContract(p, input, contract)
 		}
@@ -145,13 +145,13 @@ type EVM struct {
 // only ever be used *once*.
 func NewEVM(ctx Context, statedb StateDB, tradingStateDB *tradingstate.TradingStateDB, chainConfig *params.ChainConfig, vmConfig Config) *EVM {
 	evm := &EVM{
-		Context:        ctx,
-		StateDB:        statedb,
+		Context:      ctx,
+		StateDB:      statedb,
 		tradingStateDB: tradingStateDB,
-		vmConfig:       vmConfig,
-		chainConfig:    chainConfig,
-		chainRules:     chainConfig.Rules(ctx.BlockNumber),
-		interpreters:   make([]Interpreter, 0, 1),
+		vmConfig:     vmConfig,
+		chainConfig:  chainConfig,
+		chainRules:   chainConfig.Rules(ctx.BlockNumber),
+		interpreters: make([]Interpreter, 0, 1),
 	}
 
 	// vmConfig.EVMInterpreter will be used by EVM-C, it won't be checked here

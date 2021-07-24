@@ -54,7 +54,7 @@ func TestBloom(t *testing.T) {
 import (
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/core/state"
+	"github.com/tomochain/tomochain/core/state"
 )
 
 func TestBloom9(t *testing.T) {

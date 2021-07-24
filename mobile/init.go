@@ -22,7 +22,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/log"
 )
 
 func init() {

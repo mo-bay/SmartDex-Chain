@@ -22,8 +22,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/crypto"
 )
 
 func TestNetwork_Lookup(t *testing.T) {

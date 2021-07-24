@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
+	"github.com/tomochain/tomochain/ethdb"
 )
 
 func TestTableDatabase(t *testing.T)            { testTableDatabase(t, "prefix") }

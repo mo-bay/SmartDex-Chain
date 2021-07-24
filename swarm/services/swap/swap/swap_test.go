@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 type testInPayment struct {

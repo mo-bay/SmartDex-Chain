@@ -28,12 +28,12 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/69th-byte/SmartDex-Chain/internal/jsre"
-	"github.com/69th-byte/SmartDex-Chain/internal/web3ext"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
 	"github.com/mattn/go-colorable"
 	"github.com/peterh/liner"
 	"github.com/robertkrimen/otto"
+	"github.com/tomochain/tomochain/internal/jsre"
+	"github.com/tomochain/tomochain/internal/web3ext"
+	"github.com/tomochain/tomochain/rpc"
 )
 
 var (
@@ -272,8 +272,8 @@ func (c *Console) AutoCompleteInput(line string, pos int) (string, []string, str
 // Welcome show summary of current Geth instance and some metadata about the
 // console's available modules.
 func (c *Console) Welcome() {
-	// Print some generic Sdx metadata
-	fmt.Fprintf(c.printer, "Welcome to the Sdx JavaScript console!\n\n")
+	// Print some generic Tomo metadata
+	fmt.Fprintf(c.printer, "Welcome to the Tomo JavaScript console!\n\n")
 	c.jsre.Run(`
 		console.log("instance: " + web3.version.node);
 		console.log("coinbase: " + eth.coinbase);

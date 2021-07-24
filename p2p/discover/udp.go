@@ -25,11 +25,11 @@ import (
 	"net"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/p2p/nat"
-	"github.com/69th-byte/SmartDex-Chain/p2p/netutil"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/p2p/nat"
+	"github.com/tomochain/tomochain/p2p/netutil"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 const Version = 4
@@ -63,7 +63,7 @@ const (
 	pongPacket
 	findnodePacket
 	neighborsPacket
-	pingSdx
+	pingTomo
 )
 
 // RPC request structures
@@ -280,7 +280,7 @@ func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error {
 		To:         makeEndpoint(toaddr, 0), // TODO: maybe use known TCP port from DB
 		Expiration: uint64(time.Now().Add(expiration).Unix()),
 	}
-	packet, hash, err := encodePacket(t.priv, pingSdx, req)
+	packet, hash, err := encodePacket(t.priv, pingTomo, req)
 	if err != nil {
 		return err
 	}
@@ -292,7 +292,7 @@ func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error {
 }
 
 func (t *udp) waitping(from NodeID) error {
-	return <-t.pending(from, pingSdx, func(interface{}) bool { return true })
+	return <-t.pending(from, pingTomo, func(interface{}) bool { return true })
 }
 
 // findnode sends a findnode request to the given node and waits until
@@ -564,7 +564,7 @@ func decodePacket(buf []byte) (packet, NodeID, []byte, error) {
 	}
 	var req packet
 	switch ptype := sigdata[0]; ptype {
-	case pingSdx:
+	case pingTomo:
 		req = new(ping)
 	case pongPacket:
 		req = new(pong)
@@ -589,14 +589,14 @@ func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 		ReplyTok:   mac,
 		Expiration: uint64(time.Now().Add(expiration).Unix()),
 	})
-	if !t.handleReply(fromID, pingSdx, req) {
+	if !t.handleReply(fromID, pingTomo, req) {
 		// Note: we're ignoring the provided IP address right now
 		go t.bond(true, fromID, from, req.From.TCP)
 	}
 	return nil
 }
 
-func (req *ping) name() string { return "PING SDX/v4" }
+func (req *ping) name() string { return "PING TOMO/v4" }
 
 func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
 	if expired(req.Expiration) {

@@ -1,5 +1,4 @@
-// Copyright 2019 The Tomochain Authors
-// Copyright (c) 2021 Sdxchain
+// Copyright (c) 2018 Tomochain
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -20,12 +19,12 @@ import (
 	"bytes"
 	"encoding/json"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus/clique"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/params"
 	lru "github.com/hashicorp/golang-lru"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus/clique"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/params"
 )
 
 // Vote represents a single vote that an authorized signer made to modify the

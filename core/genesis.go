@@ -22,20 +22,19 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/tomochain/tomochain/core/rawdb"
 	"math/big"
 	"strings"
 
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
-
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/common/math"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 //go:generate gencodec -type Genesis -field-override genesisSpecMarshaling -out gen_genesis.go
@@ -213,7 +212,7 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 	case g != nil:
 		return g.Config
 	case ghash == params.MainnetGenesisHash:
-		return params.SdxMainnetChainConfig
+		return params.TomoMainnetChainConfig
 	case ghash == params.TestnetGenesisHash:
 		return params.TestnetChainConfig
 	default:
@@ -313,7 +312,7 @@ func GenesisBlockForTesting(db ethdb.Database, addr common.Address, balance *big
 // DefaultGenesisBlock returns the Ethereum main net genesis block.
 func DefaultGenesisBlock() *Genesis {
 	return &Genesis{
-		Config:     params.SdxMainnetChainConfig,
+		Config:     params.TomoMainnetChainConfig,
 		Nonce:      0,
 		ExtraData:  hexutil.MustDecode("0x00000000000000000000000000000000000000000000000000000000000000001b82c4bf317fcafe3d77e8b444c82715d216afe845b7bd987fa22c9bac89b71f0ded03f6e150ba31ad670b2b166684657ffff95f4810380ae7381e9bce41231d5dd8cdd7499e418b648c00af75d184a2f9aba09a6fa4a46fb1a6a3919b027d9cac5aa6890000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
 		GasLimit:   4700000,
@@ -388,6 +387,6 @@ func decodePrealloc(data string) GenesisAlloc {
 
 func DecodeMainnet() GenesisAlloc {
 	mainnetAlloc := GenesisAlloc{}
-	json.Unmarshal([]byte(sdxAllocData), &mainnetAlloc)
+	json.Unmarshal([]byte(tomoAllocData), &mainnetAlloc)
 	return mainnetAlloc
 }

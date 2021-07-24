@@ -17,7 +17,7 @@
 package rawdb
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
+	"github.com/tomochain/tomochain/ethdb"
 )
 
 // table is a wrapper around a database that prefixes each key access with a pre-

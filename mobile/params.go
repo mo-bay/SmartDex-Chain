@@ -21,9 +21,9 @@ package geth
 import (
 	"encoding/json"
 
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/p2p/discv5"
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/p2p/discv5"
+	"github.com/tomochain/tomochain/params"
 )
 
 // MainnetGenesis returns the JSON spec to use for the main Ethereum network. It

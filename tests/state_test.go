@@ -22,7 +22,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
+	"github.com/tomochain/tomochain/core/vm"
 )
 
 func TestState(t *testing.T) {

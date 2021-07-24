@@ -22,8 +22,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/ethdb/memorydb"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/ethdb/memorydb"
 )
 
 func TestIterator(t *testing.T) {

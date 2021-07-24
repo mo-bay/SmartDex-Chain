@@ -20,24 +20,23 @@ import (
 	"crypto/ecdsa"
 	"crypto/rand"
 	"encoding/json"
+	"github.com/tomochain/tomochain/core/rawdb"
 	"io/ioutil"
 	"math/big"
 	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
-	"github.com/69th-byte/SmartDex-Chain/tests"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/common/math"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rlp"
+	"github.com/tomochain/tomochain/tests"
 )
 
 // To generate a new callTracer test, copy paste the makeTest method below into
@@ -121,7 +120,7 @@ type callTracerTest struct {
 }
 
 func TestPrestateTracerCreate2(t *testing.T) {
-	common.TIPSdxXCancellationFee = big.NewInt(10000000000000)
+	common.TIPTomoXCancellationFee = big.NewInt(10000000000000)
 	unsignedTx := types.NewTransaction(1, common.HexToAddress("0x00000000000000000000000000000000deadbeef"),
 		new(big.Int), 5000000, big.NewInt(1), []byte{})
 

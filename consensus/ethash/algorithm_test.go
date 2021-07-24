@@ -25,9 +25,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/core/types"
 )
 
 // Tests whether the dataset size calculator works correctly by cross checking the

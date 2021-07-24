@@ -1,5 +1,4 @@
-// Copyright 2019 The Tomochain Authors
-// Copyright (c) 2021 Sdxchain
+// Copyright (c) 2018 Tomochain
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -22,13 +21,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi/bind"
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi/bind/backends"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/contracts"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
+	"github.com/tomochain/tomochain/accounts/abi/bind"
+	"github.com/tomochain/tomochain/accounts/abi/bind/backends"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/contracts"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/crypto"
 )
 
 var (

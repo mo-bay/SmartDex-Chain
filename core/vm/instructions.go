@@ -17,12 +17,12 @@
 package vm
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/params"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/math"
+	"github.com/tomochain/tomochain/core/types"
 	"golang.org/x/crypto/sha3"
 )
 

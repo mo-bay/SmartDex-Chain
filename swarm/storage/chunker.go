@@ -24,7 +24,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/metrics"
+	"github.com/tomochain/tomochain/metrics"
 )
 
 /*

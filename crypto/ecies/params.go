@@ -42,7 +42,7 @@ import (
 	"fmt"
 	"hash"
 
-	ethcrypto "github.com/69th-byte/SmartDex-Chain/crypto"
+	ethcrypto "github.com/tomochain/tomochain/crypto"
 )
 
 var (

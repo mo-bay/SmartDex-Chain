@@ -19,26 +19,25 @@ package ethapi
 
 import (
 	"context"
+	"github.com/tomochain/tomochain/tomox/tradingstate"
+	"github.com/tomochain/tomochain/tomoxlending"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxx/tradingstate"
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending"
+	"github.com/tomochain/tomochain/tomox"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxx"
-
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/eth/downloader"
-	"github.com/69th-byte/SmartDex-Chain/ethclient"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/event"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/eth/downloader"
+	"github.com/tomochain/tomochain/ethclient"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/event"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rpc"
 )
 
 // Backend interface provides the common API services (that are provided by
@@ -51,8 +50,8 @@ type Backend interface {
 	ChainDb() ethdb.Database
 	EventMux() *event.TypeMux
 	AccountManager() *accounts.Manager
-	SdxxService() *sdxx.SdxX
-	LendingService() *sdxxlending.Lending
+	TomoxService() *tomox.TomoX
+	LendingService() *tomoxlending.Lending
 
 	// BlockChain API
 	SetHead(number uint64)
@@ -62,7 +61,7 @@ type Backend interface {
 	GetBlock(ctx context.Context, blockHash common.Hash) (*types.Block, error)
 	GetReceipts(ctx context.Context, blockHash common.Hash) (types.Receipts, error)
 	GetTd(blockHash common.Hash) *big.Int
-	GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, sdxxState *tradingstate.TradingStateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error)
+	GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, tomoxState *tradingstate.TradingStateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error)
 	SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription
 	SubscribeChainHeadEvent(ch chan<- core.ChainHeadEvent) event.Subscription
 	SubscribeChainSideEvent(ch chan<- core.ChainSideEvent) event.Subscription
@@ -116,9 +115,9 @@ func GetAPIs(apiBackend Backend) []rpc.API {
 			Service:   NewPublicTransactionPoolAPI(apiBackend, nonceLock),
 			Public:    true,
 		}, {
-			Namespace: "sdxx",
+			Namespace: "tomox",
 			Version:   "1.0",
-			Service:   NewPublicSdxXTransactionPoolAPI(apiBackend, nonceLock),
+			Service:   NewPublicTomoXTransactionPoolAPI(apiBackend, nonceLock),
 			Public:    true,
 		}, {
 			Namespace: "txpool",

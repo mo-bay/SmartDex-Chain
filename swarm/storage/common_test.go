@@ -24,7 +24,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/log"
 )
 
 type brokenLimitedReader struct {

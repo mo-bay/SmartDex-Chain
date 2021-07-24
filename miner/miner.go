@@ -19,22 +19,21 @@ package miner
 
 import (
 	"fmt"
+	"github.com/tomochain/tomochain/tomoxlending"
 	"sync/atomic"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending"
-
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/eth/downloader"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/event"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/sdxx"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/eth/downloader"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/event"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/tomox"
 )
 
 // Backend wraps all methods required for mining.
@@ -43,10 +42,10 @@ type Backend interface {
 	BlockChain() *core.BlockChain
 	TxPool() *core.TxPool
 	ChainDb() ethdb.Database
-	GetSdxX() *sdxx.SdxX
+	GetTomoX() *tomox.TomoX
 	OrderPool() *core.OrderPool
 	LendingPool() *core.LendingPool
-	GetSdxXLending() *sdxxlending.Lending
+	GetTomoXLending() *tomoxlending.Lending
 }
 
 // Miner creates blocks and searches for proof-of-work values.

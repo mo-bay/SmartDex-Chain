@@ -27,8 +27,8 @@ import (
 
 	"reflect"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/crypto"
 )
 
 const jsondata = `

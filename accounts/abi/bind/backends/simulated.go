@@ -20,28 +20,27 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/core/rawdb"
 	"math/big"
 	"sync"
 	"time"
 
-	sdxchain "github.com/69th-byte/SmartDex-Chain"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
-
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi/bind"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
-	"github.com/69th-byte/SmartDex-Chain/consensus/ethash"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/bloombits"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/eth/filters"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/event"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
+	"github.com/tomochain/tomochain"
+	"github.com/tomochain/tomochain/accounts/abi/bind"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/math"
+	"github.com/tomochain/tomochain/consensus/ethash"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/bloombits"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/eth/filters"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/event"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rpc"
 )
 
 // This nil assignment ensures compile time that SimulatedBackend implements bind.ContractBackend.
@@ -188,7 +187,7 @@ func (b *SimulatedBackend) PendingCodeAt(ctx context.Context, contract common.Ad
 }
 
 // CallContract executes a contract call.
-func (b *SimulatedBackend) CallContract(ctx context.Context, call sdxchain.CallMsg, blockNumber *big.Int) ([]byte, error) {
+func (b *SimulatedBackend) CallContract(ctx context.Context, call tomochain.CallMsg, blockNumber *big.Int) ([]byte, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
@@ -205,7 +204,7 @@ func (b *SimulatedBackend) CallContract(ctx context.Context, call sdxchain.CallM
 
 //FIXME: please use copyState for this function
 // CallContractWithState executes a contract call at the given state.
-func (b *SimulatedBackend) CallContractWithState(call sdxchain.CallMsg, chain consensus.ChainContext, statedb *state.StateDB) ([]byte, error) {
+func (b *SimulatedBackend) CallContractWithState(call tomochain.CallMsg, chain consensus.ChainContext, statedb *state.StateDB) ([]byte, error) {
 	// Ensure message is initialized properly.
 	call.GasPrice = big.NewInt(0)
 
@@ -217,7 +216,7 @@ func (b *SimulatedBackend) CallContractWithState(call sdxchain.CallMsg, chain co
 	}
 	// Execute the call.
 	msg := callmsg{call}
-	feeCapacity := state.GetSRC21FeeCapacityFromState(statedb)
+	feeCapacity := state.GetTRC21FeeCapacityFromState(statedb)
 	if msg.To() != nil {
 		if value, ok := feeCapacity[*msg.To()]; ok {
 			msg.CallMsg.BalanceTokenFee = value
@@ -237,7 +236,7 @@ func (b *SimulatedBackend) CallContractWithState(call sdxchain.CallMsg, chain co
 }
 
 // PendingCallContract executes a contract call on the pending state.
-func (b *SimulatedBackend) PendingCallContract(ctx context.Context, call sdxchain.CallMsg) ([]byte, error) {
+func (b *SimulatedBackend) PendingCallContract(ctx context.Context, call tomochain.CallMsg) ([]byte, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	defer b.pendingState.RevertToSnapshot(b.pendingState.Snapshot())
@@ -263,7 +262,7 @@ func (b *SimulatedBackend) SuggestGasPrice(ctx context.Context) (*big.Int, error
 
 // EstimateGas executes the requested code against the currently pending block/state and
 // returns the used amount of gas.
-func (b *SimulatedBackend) EstimateGas(ctx context.Context, call sdxchain.CallMsg) (uint64, error) {
+func (b *SimulatedBackend) EstimateGas(ctx context.Context, call tomochain.CallMsg) (uint64, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
@@ -286,7 +285,7 @@ func (b *SimulatedBackend) EstimateGas(ctx context.Context, call sdxchain.CallMs
 
 		snapshot := b.pendingState.Snapshot()
 		_, _, failed, err := b.callContract(ctx, call, b.pendingBlock, b.pendingState)
-		fmt.Println("EstimateGas", err, failed)
+		fmt.Println("EstimateGas",err,failed)
 		b.pendingState.RevertToSnapshot(snapshot)
 
 		if err != nil || failed {
@@ -314,7 +313,7 @@ func (b *SimulatedBackend) EstimateGas(ctx context.Context, call sdxchain.CallMs
 
 // callContract implements common code between normal and pending contract calls.
 // state is modified during execution, make sure to copy it if necessary.
-func (b *SimulatedBackend) callContract(ctx context.Context, call sdxchain.CallMsg, block *types.Block, statedb *state.StateDB) ([]byte, uint64, bool, error) {
+func (b *SimulatedBackend) callContract(ctx context.Context, call tomochain.CallMsg, block *types.Block, statedb *state.StateDB) ([]byte, uint64, bool, error) {
 	// Ensure message is initialized properly.
 	if call.GasPrice == nil {
 		call.GasPrice = big.NewInt(1)
@@ -330,7 +329,7 @@ func (b *SimulatedBackend) callContract(ctx context.Context, call sdxchain.CallM
 	from.SetBalance(math.MaxBig256)
 	// Execute the call.
 	msg := callmsg{call}
-	feeCapacity := state.GetSRC21FeeCapacityFromState(statedb)
+	feeCapacity := state.GetTRC21FeeCapacityFromState(statedb)
 	if msg.To() != nil {
 		if value, ok := feeCapacity[*msg.To()]; ok {
 			msg.CallMsg.BalanceTokenFee = value
@@ -377,7 +376,7 @@ func (b *SimulatedBackend) SendTransaction(ctx context.Context, tx *types.Transa
 // returning all the results in one batch.
 //
 // TODO(karalabe): Deprecate when the subscription one can return past data too.
-func (b *SimulatedBackend) FilterLogs(ctx context.Context, query sdxchain.FilterQuery) ([]types.Log, error) {
+func (b *SimulatedBackend) FilterLogs(ctx context.Context, query tomochain.FilterQuery) ([]types.Log, error) {
 	// Initialize unset filter boundaried to run from genesis to chain head
 	from := int64(0)
 	if query.FromBlock != nil {
@@ -403,7 +402,7 @@ func (b *SimulatedBackend) FilterLogs(ctx context.Context, query sdxchain.Filter
 
 // SubscribeFilterLogs creates a background log filtering operation, returning a
 // subscription immediately, which can be used to stream the found events.
-func (b *SimulatedBackend) SubscribeFilterLogs(ctx context.Context, query sdxchain.FilterQuery, ch chan<- types.Log) (sdxchain.Subscription, error) {
+func (b *SimulatedBackend) SubscribeFilterLogs(ctx context.Context, query tomochain.FilterQuery, ch chan<- types.Log) (tomochain.Subscription, error) {
 	// Subscribe to contract events
 	sink := make(chan []*types.Log)
 
@@ -455,7 +454,7 @@ func (b *SimulatedBackend) AdjustTime(adjustment time.Duration) error {
 
 // callmsg implements core.Message to allow passing it as a transaction simulator.
 type callmsg struct {
-	sdxchain.CallMsg
+	tomochain.CallMsg
 }
 
 func (m callmsg) From() common.Address      { return m.CallMsg.From }

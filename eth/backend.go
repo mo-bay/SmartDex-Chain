@@ -27,41 +27,41 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending"
+	"github.com/tomochain/tomochain/tomoxlending"
 
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi/bind"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/eth/filters"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/accounts/abi/bind"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/eth/filters"
+	"github.com/tomochain/tomochain/rlp"
 
 	"bytes"
 
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/consensus/ethash"
-	"github.com/69th-byte/SmartDex-Chain/consensus/posv"
-	"github.com/69th-byte/SmartDex-Chain/contracts"
-	contractValidator "github.com/69th-byte/SmartDex-Chain/contracts/validator/contract"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/bloombits"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/consensus/ethash"
+	"github.com/tomochain/tomochain/consensus/posv"
+	"github.com/tomochain/tomochain/contracts"
+	contractValidator "github.com/tomochain/tomochain/contracts/validator/contract"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/bloombits"
 
-	//"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/eth/downloader"
-	"github.com/69th-byte/SmartDex-Chain/eth/gasprice"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/event"
-	"github.com/69th-byte/SmartDex-Chain/internal/ethapi"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/miner"
-	"github.com/69th-byte/SmartDex-Chain/node"
-	"github.com/69th-byte/SmartDex-Chain/p2p"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
-	"github.com/69th-byte/SmartDex-Chain/sdxx"
+	//"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/eth/downloader"
+	"github.com/tomochain/tomochain/eth/gasprice"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/event"
+	"github.com/tomochain/tomochain/internal/ethapi"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/miner"
+	"github.com/tomochain/tomochain/node"
+	"github.com/tomochain/tomochain/p2p"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rpc"
+	"github.com/tomochain/tomochain/tomox"
 )
 
 type LesServer interface {
@@ -107,8 +107,8 @@ type Ethereum struct {
 	netRPCService *ethapi.PublicNetAPI
 
 	lock    sync.RWMutex // Protects the variadic fields (e.g. gas price and etherbase)
-	SdxX    *sdxx.SdxX
-	Lending *sdxxlending.Lending
+	TomoX   *tomox.TomoX
+	Lending *tomoxlending.Lending
 }
 
 func (s *Ethereum) AddLesServer(ls LesServer) {
@@ -118,7 +118,7 @@ func (s *Ethereum) AddLesServer(ls LesServer) {
 
 // New creates a new Ethereum object (including the
 // initialisation of the common Ethereum object)
-func New(ctx *node.ServiceContext, config *Config, sdxXServ *sdxx.SdxX, lendingServ *sdxxlending.Lending) (*Ethereum, error) {
+func New(ctx *node.ServiceContext, config *Config, tomoXServ *tomox.TomoX, lendingServ *tomoxlending.Lending) (*Ethereum, error) {
 	if config.SyncMode == downloader.LightSync {
 		return nil, errors.New("can't run eth.Ethereum in light sync mode, use les.LightEthereum")
 	}
@@ -150,9 +150,9 @@ func New(ctx *node.ServiceContext, config *Config, sdxXServ *sdxx.SdxX, lendingS
 		bloomRequests:  make(chan chan *bloombits.Retrieval),
 		bloomIndexer:   NewBloomIndexer(chainDb, params.BloomBitsBlocks),
 	}
-	// Inject SdxX Service into main Eth Service.
-	if sdxXServ != nil {
-		eth.SdxX = sdxXServ
+	// Inject TomoX Service into main Eth Service.
+	if tomoXServ != nil {
+		eth.TomoX = tomoXServ
 	}
 	if lendingServ != nil {
 		eth.Lending = lendingServ
@@ -172,14 +172,14 @@ func New(ctx *node.ServiceContext, config *Config, sdxXServ *sdxx.SdxX, lendingS
 	)
 	if eth.chainConfig.Posv != nil {
 		c := eth.engine.(*posv.Posv)
-		c.GetSdxXService = func() posv.TradingService {
-			return eth.SdxX
+		c.GetTomoXService = func() posv.TradingService {
+			return eth.TomoX
 		}
 		c.GetLendingService = func() posv.LendingService {
 			return eth.Lending
 		}
 	}
-	eth.blockchain, err = core.NewBlockChainEx(chainDb, sdxXServ.GetLevelDB(), cacheConfig, eth.chainConfig, eth.engine, vmConfig)
+	eth.blockchain, err = core.NewBlockChainEx(chainDb, tomoXServ.GetLevelDB(), cacheConfig, eth.chainConfig, eth.engine, vmConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -464,7 +464,7 @@ func New(ctx *node.ServiceContext, config *Config, sdxXServ *sdxx.SdxX, lendingS
 				return nil, err
 			}
 			addr := common.HexToAddress(common.MasternodeVotingSMC)
-			validator, err := contractValidator.NewSdxValidator(addr, client)
+			validator, err := contractValidator.NewTomoValidator(addr, client)
 			if err != nil {
 				return nil, err
 			}
@@ -601,7 +601,7 @@ func makeExtraData(extra []byte) []byte {
 		// create default extradata
 		extra, _ = rlp.EncodeToBytes([]interface{}{
 			uint(params.VersionMajor<<16 | params.VersionMinor<<8 | params.VersionPatch),
-			"sdx",
+			"tomo",
 			runtime.Version(),
 			runtime.GOOS,
 		})
@@ -939,15 +939,15 @@ func (s *Ethereum) GetPeer() int {
 	return len(s.protocolManager.peers.peers)
 }
 
-func (s *Ethereum) GetSdxX() *sdxx.SdxX {
-	return s.SdxX
+func (s *Ethereum) GetTomoX() *tomox.TomoX {
+	return s.TomoX
 }
 
 func (s *Ethereum) OrderPool() *core.OrderPool {
 	return s.orderPool
 }
 
-func (s *Ethereum) GetSdxXLending() *sdxxlending.Lending {
+func (s *Ethereum) GetTomoXLending() *tomoxlending.Lending {
 	return s.Lending
 }
 

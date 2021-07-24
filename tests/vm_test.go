@@ -17,16 +17,15 @@
 package tests
 
 import (
+	"github.com/tomochain/tomochain/common"
 	"math/big"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
+	"github.com/tomochain/tomochain/core/vm"
 )
 
 func TestVM(t *testing.T) {
-	common.TIPSdxXCancellationFee = big.NewInt(100000000)
+	common.TIPTomoXCancellationFee=big.NewInt(100000000)
 	t.Parallel()
 	vmt := new(testMatcher)
 	vmt.fails("^vmSystemOperationsTest.json/createNameRegistrator$", "fails without parallel execution")

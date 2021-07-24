@@ -22,9 +22,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/ethdb/memorydb"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/ethdb/memorydb"
 )
 
 func newEmptySecure() *SecureTrie {

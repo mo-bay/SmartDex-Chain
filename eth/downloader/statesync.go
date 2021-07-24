@@ -18,18 +18,18 @@ package downloader
 
 import (
 	"fmt"
-	"github.com/69th-byte/SmartDex-Chain/ethdb/memorydb"
+	"github.com/tomochain/tomochain/ethdb/memorydb"
 	"hash"
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/crypto/sha3"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/trie"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/crypto/sha3"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/trie"
 )
 
 // stateReq represents a batch of state fetch requests groupped together into
@@ -237,7 +237,7 @@ type stateTask struct {
 
 // newStateSync creates a new state trie download scheduler. This method does not
 // yet start the sync. The user needs to call run to initiate.
-// only use fast sync but sdx only run full sync
+// only use fast sync but tomo only run full sync
 func newStateSync(d *Downloader, root common.Hash) *stateSync {
 	return &stateSync{
 		d:       d,

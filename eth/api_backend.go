@@ -21,36 +21,35 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/tomochain/tomochain/tomox/tradingstate"
+	"github.com/tomochain/tomochain/tomoxlending"
 	"io/ioutil"
 	"math/big"
 	"path/filepath"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxx/tradingstate"
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending"
+	"github.com/tomochain/tomochain/tomox"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxx"
+	"github.com/tomochain/tomochain/consensus/posv"
 
-	"github.com/69th-byte/SmartDex-Chain/consensus/posv"
-
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/math"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/contracts"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/bloombits"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	stateDatabase "github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
-	"github.com/69th-byte/SmartDex-Chain/eth/downloader"
-	"github.com/69th-byte/SmartDex-Chain/eth/gasprice"
-	"github.com/69th-byte/SmartDex-Chain/ethclient"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/event"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/math"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/contracts"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/bloombits"
+	"github.com/tomochain/tomochain/core/state"
+	stateDatabase "github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/core/vm"
+	"github.com/tomochain/tomochain/eth/downloader"
+	"github.com/tomochain/tomochain/eth/gasprice"
+	"github.com/tomochain/tomochain/ethclient"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/event"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rpc"
 )
 
 // EthApiBackend implements ethapi.Backend for full nodes
@@ -137,12 +136,12 @@ func (b *EthApiBackend) GetTd(blockHash common.Hash) *big.Int {
 	return b.eth.blockchain.GetTdByHash(blockHash)
 }
 
-func (b *EthApiBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, sdxxState *tradingstate.TradingStateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error) {
+func (b *EthApiBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, tomoxState *tradingstate.TradingStateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error) {
 	state.SetBalance(msg.From(), math.MaxBig256)
 	vmError := func() error { return nil }
 
 	context := core.NewEVMContext(msg, header, b.eth.BlockChain(), nil)
-	return vm.NewEVM(context, state, sdxxState, b.eth.chainConfig, vmCfg), vmError, nil
+	return vm.NewEVM(context, state, tomoxState, b.eth.chainConfig, vmCfg), vmError, nil
 }
 
 func (b *EthApiBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
@@ -427,25 +426,25 @@ func (b *EthApiBackend) AreTwoBlockSamePath(bh1 common.Hash, bh2 common.Hash) bo
 
 // GetOrderNonce get order nonce
 func (b *EthApiBackend) GetOrderNonce(address common.Hash) (uint64, error) {
-	sdxxService := b.eth.GetSdxX()
-	if sdxxService != nil {
+	tomoxService := b.eth.GetTomoX()
+	if tomoxService != nil {
 		author, err := b.GetEngine().Author(b.CurrentBlock().Header())
 		if err != nil {
 			return 0, err
 		}
-		sdxxState, err := sdxxService.GetTradingState(b.CurrentBlock(), author)
+		tomoxState, err := tomoxService.GetTradingState(b.CurrentBlock(), author)
 		if err != nil {
 			return 0, err
 		}
-		return sdxxState.GetNonce(address), nil
+		return tomoxState.GetNonce(address), nil
 	}
-	return 0, errors.New("cannot find sdxx service")
+	return 0, errors.New("cannot find tomox service")
 }
 
-func (b *EthApiBackend) SdxxService() *sdxx.SdxX {
-	return b.eth.SdxX
+func (b *EthApiBackend) TomoxService() *tomox.TomoX {
+	return b.eth.TomoX
 }
 
-func (b *EthApiBackend) LendingService() *sdxxlending.Lending {
+func (b *EthApiBackend) LendingService() *tomoxlending.Lending {
 	return b.eth.Lending
 }

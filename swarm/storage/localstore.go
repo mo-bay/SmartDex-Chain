@@ -19,7 +19,7 @@ package storage
 import (
 	"encoding/binary"
 
-	"github.com/69th-byte/SmartDex-Chain/metrics"
+	"github.com/tomochain/tomochain/metrics"
 )
 
 //metrics variables

@@ -18,13 +18,13 @@ package state
 
 import (
 	"bytes"
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
+	"github.com/tomochain/tomochain/core/rawdb"
 	"math/big"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/ethdb"
 	checker "gopkg.in/check.v1"
 )
 

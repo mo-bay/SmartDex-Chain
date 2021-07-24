@@ -19,21 +19,20 @@ package console
 import (
 	"bytes"
 	"errors"
+	"github.com/tomochain/tomochain/tomox"
+	"github.com/tomochain/tomochain/tomoxlending"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxx"
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending"
-
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/consensus/ethash"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/eth"
-	"github.com/69th-byte/SmartDex-Chain/internal/jsre"
-	"github.com/69th-byte/SmartDex-Chain/node"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/consensus/ethash"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/eth"
+	"github.com/tomochain/tomochain/internal/jsre"
+	"github.com/tomochain/tomochain/node"
 )
 
 const (
@@ -108,7 +107,7 @@ func newTester(t *testing.T, confOverride func(*eth.Config)) *tester {
 		confOverride(ethConf)
 	}
 	if err = stack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
-		return eth.New(ctx, ethConf, &sdxx.SdxX{}, &sdxxlending.Lending{})
+		return eth.New(ctx, ethConf, &tomox.TomoX{}, &tomoxlending.Lending{})
 	}); err != nil {
 		t.Fatalf("failed to register Ethereum protocol: %v", err)
 	}

@@ -23,9 +23,9 @@ import (
 	mrand "math/rand"
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 func generateMessageParams() (*MessageParams, error) {

@@ -24,22 +24,22 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/params"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/params"
 
 	"context"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi/bind"
-	"github.com/69th-byte/SmartDex-Chain/accounts/abi/bind/backends"
-	blockSignerContract "github.com/69th-byte/SmartDex-Chain/contracts/blocksigner"
-	multiSignWalletContract "github.com/69th-byte/SmartDex-Chain/contracts/multisigwallet"
-	randomizeContract "github.com/69th-byte/SmartDex-Chain/contracts/randomize"
-	validatorContract "github.com/69th-byte/SmartDex-Chain/contracts/validator"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
+	"github.com/tomochain/tomochain/accounts/abi/bind"
+	"github.com/tomochain/tomochain/accounts/abi/bind/backends"
+	blockSignerContract "github.com/tomochain/tomochain/contracts/blocksigner"
+	multiSignWalletContract "github.com/tomochain/tomochain/contracts/multisigwallet"
+	randomizeContract "github.com/tomochain/tomochain/contracts/randomize"
+	validatorContract "github.com/tomochain/tomochain/contracts/validator"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/rlp"
 )
 
 // makeGenesis creates a new genesis struct based on some user input.
@@ -152,7 +152,7 @@ func (w *wizard) makeGenesis() {
 			}
 		}
 		validatorCap := new(big.Int)
-		validatorCap.SetString("10000000000000000000000", 10)
+		validatorCap.SetString("50000000000000000000000", 10)
 		var validatorCaps []*big.Int
 		genesis.ExtraData = make([]byte, 32+len(signers)*common.AddressLength+65)
 		for i, signer := range signers {
@@ -312,10 +312,10 @@ func (w *wizard) makeGenesis() {
 		}
 
 		fmt.Println()
-		fmt.Println("What is swap wallet address for fund 200m sdx?")
+		fmt.Println("What is swap wallet address for fund 55m tomo?")
 		swapAddr := *w.readAddress()
-		baseBalance := big.NewInt(0) // 200m
-		baseBalance.Add(baseBalance, big.NewInt(200*1000*1000))
+		baseBalance := big.NewInt(0) // 55m
+		baseBalance.Add(baseBalance, big.NewInt(55*1000*1000))
 		baseBalance.Mul(baseBalance, big.NewInt(1000000000000000000))
 		genesis.Alloc[swapAddr] = core.GenesisAccount{
 			Balance: baseBalance,

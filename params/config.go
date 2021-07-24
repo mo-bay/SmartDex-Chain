@@ -20,19 +20,19 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 var (
-	SdxMainnetGenesisHash = common.HexToHash("9326145f8a2c8c00bbe13afc7d7f3d9c868b5ef39d89f2f4e9390e9720298624") // Sdx Mainnet genesis hash to enforce below configs on
-	MainnetGenesisHash    = common.HexToHash("8d13370621558f4ed0da587934473c0404729f28b0ff1d50e5fdd840457a2f17") // Mainnet genesis hash to enforce below configs on
-	TestnetGenesisHash    = common.HexToHash("dffc8ae3b45965404b4fd73ce7f0e13e822ac0fc23ce7e95b42bc5f1e57023a5") // Testnet genesis hash to enforce below configs on
+	TomoMainnetGenesisHash = common.HexToHash("9326145f8a2c8c00bbe13afc7d7f3d9c868b5ef39d89f2f4e9390e9720298624") // Tomo Mainnet genesis hash to enforce below configs on
+	MainnetGenesisHash     = common.HexToHash("8d13370621558f4ed0da587934473c0404729f28b0ff1d50e5fdd840457a2f17") // Mainnet genesis hash to enforce below configs on
+	TestnetGenesisHash     = common.HexToHash("dffc8ae3b45965404b4fd73ce7f0e13e822ac0fc23ce7e95b42bc5f1e57023a5") // Testnet genesis hash to enforce below configs on
 )
 
 var (
-	// SdxChain mainnet config
-	SdxMainnetChainConfig = &ChainConfig{
-		ChainId:        big.NewInt(7879),
+	// TomoChain mainnet config
+	TomoMainnetChainConfig = &ChainConfig{
+		ChainId:        big.NewInt(88),
 		HomesteadBlock: big.NewInt(1),
 		EIP150Block:    big.NewInt(2),
 		EIP150Hash:     common.HexToHash("0x0000000000000000000000000000000000000000000000000000000000000000"),
@@ -42,9 +42,9 @@ var (
 		Posv: &PosvConfig{
 			Period:              2,
 			Epoch:               900,
-			Reward:              6600,
+			Reward:              250,
 			RewardCheckpoint:    900,
-			Gap:                 450,
+			Gap:                 5,
 			FoudationWalletAddr: common.HexToAddress("0x0000000000000000000000000000000000000068"),
 		},
 	}
@@ -237,12 +237,12 @@ func (c *ChainConfig) IsConstantinople(num *big.Int) bool {
 // - equal to or greater than the PetersburgBlock fork block,
 // - OR is nil, and Constantinople is active
 func (c *ChainConfig) IsPetersburg(num *big.Int) bool {
-	return isForked(common.TIPSdxXCancellationFee, num)
+	return isForked(common.TIPTomoXCancellationFee, num)
 }
 
 // IsIstanbul returns whether num is either equal to the Istanbul fork block or greater.
 func (c *ChainConfig) IsIstanbul(num *big.Int) bool {
-	return isForked(common.TIPSdxXCancellationFee, num)
+	return isForked(common.TIPTomoXCancellationFee, num)
 }
 
 func (c *ChainConfig) IsTIP2019(num *big.Int) bool {
@@ -257,20 +257,20 @@ func (c *ChainConfig) IsTIPRandomize(num *big.Int) bool {
 	return isForked(common.TIPRandomize, num)
 }
 
-func (c *ChainConfig) IsTIPSdxX(num *big.Int) bool {
+func (c *ChainConfig) IsTIPTomoX(num *big.Int) bool {
 	if common.IsTestnet {
-		return isForked(common.TIPSdxXTestnet, num)
+		return isForked(common.TIPTomoXTestnet, num)
 	} else {
-		return isForked(common.TIPSdxX, num)
+		return isForked(common.TIPTomoX, num)
 	}
 }
 
-func (c *ChainConfig) IsTIPSdxXLending(num *big.Int) bool {
-	return isForked(common.TIPSdxXLending, num)
+func (c *ChainConfig) IsTIPTomoXLending(num *big.Int) bool {
+	return isForked(common.TIPTomoXLending, num)
 }
 
-func (c *ChainConfig) IsTIPSdxXCancellationFee(num *big.Int) bool {
-	return isForked(common.TIPSdxXCancellationFee, num)
+func (c *ChainConfig) IsTIPTomoXCancellationFee(num *big.Int) bool {
+	return isForked(common.TIPTomoXCancellationFee, num)
 }
 
 // GasTable returns the gas table corresponding to the current phase (homestead or homestead reprice).

@@ -30,8 +30,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/accounts/keystore"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
+	"github.com/tomochain/tomochain/accounts/keystore"
+	"github.com/tomochain/tomochain/core/types"
 )
 
 // Tests that the account management snippets work correctly.

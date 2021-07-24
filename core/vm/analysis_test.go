@@ -19,7 +19,7 @@ package vm
 import (
 	"testing"
 
-	"github.com/69th-byte/SmartDex-Chain/crypto"
+	"github.com/tomochain/tomochain/crypto"
 )
 
 func TestJumpDestAnalysis(t *testing.T) {

@@ -19,7 +19,7 @@ package ethapi
 import (
 	"sync"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 type AddrLocker struct {

@@ -17,13 +17,13 @@
 package eth
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
+	"github.com/tomochain/tomochain/core/rawdb"
 	"reflect"
 	"testing"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/state"
 )
 
 var dumper = spew.ConfigState{Indent: "    "}

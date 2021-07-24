@@ -17,8 +17,8 @@
 package core
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core/types"
 )
 
 // TxPreEvent is posted when a transaction enters the transaction pool.

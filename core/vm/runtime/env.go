@@ -17,8 +17,8 @@
 package runtime
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/vm"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/vm"
 )
 
 func NewEnv(cfg *Config) *vm.EVM {

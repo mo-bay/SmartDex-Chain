@@ -19,10 +19,10 @@ package les
 import (
 	"context"
 
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/light"
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/light"
+	"github.com/tomochain/tomochain/log"
 )
 
 // LesOdr implements light.OdrBackend

@@ -1,14 +1,14 @@
 package utils
 
 import (
-	"github.com/69th-byte/SmartDex-Chain/eth"
-	"github.com/69th-byte/SmartDex-Chain/eth/downloader"
-	"github.com/69th-byte/SmartDex-Chain/ethstats"
-	"github.com/69th-byte/SmartDex-Chain/les"
-	"github.com/69th-byte/SmartDex-Chain/node"
-	"github.com/69th-byte/SmartDex-Chain/sdxx"
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending"
-	whisper "github.com/69th-byte/SmartDex-Chain/whisper/whisperv6"
+	"github.com/tomochain/tomochain/eth"
+	"github.com/tomochain/tomochain/eth/downloader"
+	"github.com/tomochain/tomochain/ethstats"
+	"github.com/tomochain/tomochain/les"
+	"github.com/tomochain/tomochain/node"
+	"github.com/tomochain/tomochain/tomox"
+	"github.com/tomochain/tomochain/tomoxlending"
+	whisper "github.com/tomochain/tomochain/whisper/whisperv6"
 )
 
 // RegisterEthService adds an Ethereum client to the stack.
@@ -20,11 +20,11 @@ func RegisterEthService(stack *node.Node, cfg *eth.Config) {
 		})
 	} else {
 		err = stack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
-			var sdxXServ *sdxx.SdxX
-			ctx.Service(&sdxXServ)
-			var lendingServ *sdxxlending.Lending
+			var tomoXServ *tomox.TomoX
+			ctx.Service(&tomoXServ)
+			var lendingServ *tomoxlending.Lending
 			ctx.Service(&lendingServ)
-			fullNode, err := eth.New(ctx, cfg, sdxXServ, lendingServ)
+			fullNode, err := eth.New(ctx, cfg, tomoXServ, lendingServ)
 			if fullNode != nil && cfg.LightServ > 0 {
 				ls, _ := les.NewLesServer(fullNode, cfg)
 				fullNode.AddLesServer(ls)
@@ -63,18 +63,18 @@ func RegisterEthStatsService(stack *node.Node, url string) {
 	}
 }
 
-func RegisterSdxXService(stack *node.Node, cfg *sdxx.Config) {
-	sdxX := sdxx.New(cfg)
+func RegisterTomoXService(stack *node.Node, cfg *tomox.Config) {
+	tomoX := tomox.New(cfg)
 	if err := stack.Register(func(n *node.ServiceContext) (node.Service, error) {
-		return sdxX, nil
+		return tomoX, nil
 	}); err != nil {
-		Fatalf("Failed to register the SdxX service: %v", err)
+		Fatalf("Failed to register the TomoX service: %v", err)
 	}
 
-	// register sdxxlending service
+	// register tomoxlending service
 	if err := stack.Register(func(n *node.ServiceContext) (node.Service, error) {
-		return sdxxlending.New(sdxX), nil
+		return tomoxlending.New(tomoX), nil
 	}); err != nil {
-		Fatalf("Failed to register the SdxXLending service: %v", err)
+		Fatalf("Failed to register the TomoXLending service: %v", err)
 	}
 }

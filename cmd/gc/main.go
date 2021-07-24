@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/tomochain/tomochain/core/rawdb"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/ethdb/leveldb"
 	"os"
 	"os/signal"
 	"runtime"
@@ -10,22 +13,18 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/core/rawdb"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/ethdb/leveldb"
-
-	"github.com/69th-byte/SmartDex-Chain/cmd/utils"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/core"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/eth"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
-	"github.com/69th-byte/SmartDex-Chain/trie"
-	lru "github.com/hashicorp/golang-lru"
+	"github.com/hashicorp/golang-lru"
+	"github.com/tomochain/tomochain/cmd/utils"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/core"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/eth"
+	"github.com/tomochain/tomochain/rlp"
+	"github.com/tomochain/tomochain/trie"
 )
 
 var (
-	dir          = flag.String("dir", "", "directory to SdxChain chaindata")
+	dir          = flag.String("dir", "", "directory to TomoChain chaindata")
 	cacheSize    = flag.Int("size", 1000000, "LRU cache size")
 	sercureKey   = []byte("secure-key-")
 	nWorker      = runtime.NumCPU() / 2

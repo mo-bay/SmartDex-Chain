@@ -22,7 +22,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/69th-byte/SmartDex-Chain/core/asm"
+	"github.com/tomochain/tomochain/core/asm"
 	cli "gopkg.in/urfave/cli.v1"
 )
 

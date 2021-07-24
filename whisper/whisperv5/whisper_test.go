@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/common"
+	"github.com/tomochain/tomochain/common"
 )
 
 func TestWhisperBasic(t *testing.T) {

@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/69th-byte/SmartDex-Chain/log"
+	"github.com/tomochain/tomochain/log"
 )
 
 // CreateIPCListener creates an listener, on Unix platforms this is a unix socket, on

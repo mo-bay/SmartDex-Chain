@@ -1,5 +1,4 @@
-// Copyright 2019 The Tomochain Authors
-// Copyright (c) 2021 Sdxchain
+// Copyright (c) 2018 Tomochain
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +21,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/tomochain/tomochain/tomox/tradingstate"
+	"github.com/tomochain/tomochain/tomoxlending/lendingstate"
+	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
 	"io/ioutil"
 	"math/big"
 	"math/rand"
@@ -32,26 +34,22 @@ import (
 	"sync"
 	"time"
 
-	"github.com/69th-byte/SmartDex-Chain/sdxx/tradingstate"
-	"github.com/69th-byte/SmartDex-Chain/sdxxlending/lendingstate"
-	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
-
-	"github.com/69th-byte/SmartDex-Chain/accounts"
-	"github.com/69th-byte/SmartDex-Chain/common"
-	"github.com/69th-byte/SmartDex-Chain/common/hexutil"
-	"github.com/69th-byte/SmartDex-Chain/consensus"
-	"github.com/69th-byte/SmartDex-Chain/consensus/clique"
-	"github.com/69th-byte/SmartDex-Chain/consensus/misc"
-	"github.com/69th-byte/SmartDex-Chain/core/state"
-	"github.com/69th-byte/SmartDex-Chain/core/types"
-	"github.com/69th-byte/SmartDex-Chain/crypto"
-	"github.com/69th-byte/SmartDex-Chain/crypto/sha3"
-	"github.com/69th-byte/SmartDex-Chain/ethdb"
-	"github.com/69th-byte/SmartDex-Chain/log"
-	"github.com/69th-byte/SmartDex-Chain/params"
-	"github.com/69th-byte/SmartDex-Chain/rlp"
-	"github.com/69th-byte/SmartDex-Chain/rpc"
 	lru "github.com/hashicorp/golang-lru"
+	"github.com/tomochain/tomochain/accounts"
+	"github.com/tomochain/tomochain/common"
+	"github.com/tomochain/tomochain/common/hexutil"
+	"github.com/tomochain/tomochain/consensus"
+	"github.com/tomochain/tomochain/consensus/clique"
+	"github.com/tomochain/tomochain/consensus/misc"
+	"github.com/tomochain/tomochain/core/state"
+	"github.com/tomochain/tomochain/core/types"
+	"github.com/tomochain/tomochain/crypto"
+	"github.com/tomochain/tomochain/crypto/sha3"
+	"github.com/tomochain/tomochain/ethdb"
+	"github.com/tomochain/tomochain/log"
+	"github.com/tomochain/tomochain/params"
+	"github.com/tomochain/tomochain/rlp"
+	"github.com/tomochain/tomochain/rpc"
 )
 
 const (
@@ -71,7 +69,7 @@ type TradingService interface {
 	HasTradingState(block *types.Block, author common.Address) bool
 	GetStateCache() tradingstate.Database
 	GetTriegc() *prque.Prque
-	ApplyOrder(header *types.Header, coinbase common.Address, chain consensus.ChainContext, statedb *state.StateDB, sdxXstatedb *tradingstate.TradingStateDB, orderBook common.Hash, order *tradingstate.OrderItem) ([]map[string]string, []*tradingstate.OrderItem, error)
+	ApplyOrder(header *types.Header, coinbase common.Address, chain consensus.ChainContext, statedb *state.StateDB, tomoXstatedb *tradingstate.TradingStateDB, orderBook common.Hash, order *tradingstate.OrderItem) ([]map[string]string, []*tradingstate.OrderItem, error)
 	UpdateMediumPriceBeforeEpoch(epochNumber uint64, tradingStateDB *tradingstate.TradingStateDB, statedb *state.StateDB) error
 	IsSDKNode() bool
 	SyncDataToSDKNode(takerOrder *tradingstate.OrderItem, txHash common.Hash, txMatchTime time.Time, statedb *state.StateDB, trades []map[string]string, rejectedOrders []*tradingstate.OrderItem, dirtyOrderCount *uint64) error
@@ -267,7 +265,7 @@ type Posv struct {
 	HookPenaltyTIPSigning      func(chain consensus.ChainReader, header *types.Header, candidate []common.Address) ([]common.Address, error)
 	HookValidator              func(header *types.Header, signers []common.Address) ([]byte, error)
 	HookVerifyMNs              func(header *types.Header, signers []common.Address) error
-	GetSdxXService             func() TradingService
+	GetTomoXService            func() TradingService
 	GetLendingService          func() LendingService
 	HookGetSignersFromContract func(blockHash common.Hash) ([]common.Address, error)
 }
@@ -469,9 +467,9 @@ func (c *Posv) verifyCascadingFields(chain consensus.ChainReader, header *types.
 func (c *Posv) checkSignersOnCheckpoint(chain consensus.ChainReader, header *types.Header, signers []common.Address) error {
 	number := header.Number.Uint64()
 	// ignore signerCheck at checkpoint block 14458500 due to wrong snapshot at gap 14458495
-	// if number == common.IgnoreSignerCheckBlock {
-	//	return nil
-	//}
+	if number == common.IgnoreSignerCheckBlock {
+		return nil
+	}
 	penPenalties := []common.Address{}
 	if c.HookPenalty != nil || c.HookPenaltyTIPSigning != nil {
 		var err error
@@ -584,7 +582,7 @@ func (c *Posv) YourTurn(chain consensus.ChainReader, parent *types.Header, signe
 	masternodes := c.GetMasternodes(chain, parent)
 
 	if common.IsTestnet {
-		// Only three mns hard code for sdx testnet.
+		// Only three mns hard code for tomo testnet.
 		masternodes = []common.Address{
 			common.HexToAddress("0xfFC679Dcdf444D2eEb0491A998E7902B411CcF20"),
 			common.HexToAddress("0xd76fd76F7101811726DCE9E43C2617706a4c45c8"),
@@ -1282,7 +1280,7 @@ func (c *Posv) CheckMNTurn(chain consensus.ChainReader, parent *types.Header, si
 	masternodes := c.GetMasternodes(chain, parent)
 
 	if common.IsTestnet {
-		// Only three mns hard code for sdx testnet.
+		// Only three mns hard code for tomo testnet.
 		masternodes = []common.Address{
 			common.HexToAddress("0xfFC679Dcdf444D2eEb0491A998E7902B411CcF20"),
 			common.HexToAddress("0xd76fd76F7101811726DCE9E43C2617706a4c45c8"),

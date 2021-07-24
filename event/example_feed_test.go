@@ -19,7 +19,7 @@ package event_test
 import (
 	"fmt"
 
-	"github.com/69th-byte/SmartDex-Chain/event"
+	"github.com/tomochain/tomochain/event"
 )
 
 func ExampleFeed_acknowledgedEvents() {
